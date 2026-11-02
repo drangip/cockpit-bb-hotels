@@ -1,0 +1,1035 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cockpit B&amp;B HOTELS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Roboto:wght@400;500;700&display=swap">
+<style>
+/* Layout : bandeau logos + filtres, puis trois sections : carte|fiche hôtel, objectif du mois, volet channels.
+   Charte hotel-bb.com : vert profond #183029, vert lime #B1D600, Poppins (titres) + Roboto (texte). */
+:root {
+  --bg: #F2F5F4;
+  --surface: #FFFFFF;
+  --surface-2: #F6F8F7;
+  --fg: #183029;          /* vert B&B */
+  --muted: #5E6E6A;
+  --line: #DBE0DF;
+  --band: #183029;
+  --band-fg: #FFFFFF;
+  --lime: #B1D600;        /* lime B&B */
+  --lime-ink: #183029;
+  --accent: #6E8C00;      /* lime foncé lisible sur blanc */
+  --up: #1D7A3E; --up-bg: #E3F2E7;
+  --down: #C2332F; --down-bg: #FBE4E3;
+  /* Statut objectif (divergent, milieu neutre) */
+  --st-above: #1D8A4A; --st-line: #9AA5A2; --st-below: #E34948;
+  /* Départements : séquentiel vert */
+  --map-0: #EAEFEC; --map-1: #D3E59A; --map-2: #A9C93A; --map-3: #6E8C00;
+  /* Familles de channels (palette catégorielle validée, ordre fixe) */
+  --c1: #2a78d6; --c2: #eb6834; --c3: #1baf7a; --c4: #eda100; --c5: #e87ba4; --c6: #008300; --c7: #6250d6; --c8: #A3ABA9;
+  --logo-bg: transparent;
+  --shadow: 0 1px 2px rgba(24,48,41,.06), 0 4px 14px rgba(24,48,41,.06);
+  --f-display: "Poppins", "Segoe UI", system-ui, sans-serif;
+  --f-body: "Roboto", "Segoe UI", system-ui, sans-serif;
+  --r: 14px;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0F1D19; --surface: #162823; --surface-2: #1C312B; --fg: #EEF3F1; --muted: #A9B8B3; --line: #2A433C;
+    --band: #0B1714; --band-fg: #E6F0C2; --lime: #BEE500; --accent: #BEE500;
+    --up: #6FD08F; --up-bg: #183A26; --down: #FF7F7A; --down-bg: #3D1C1B;
+    --st-above: #3CBF6E; --st-line: #7E8C88; --st-below: #F06A69;
+    --map-0: #22362F; --map-1: #3B5A2C; --map-2: #6F8F12; --map-3: #B1D600;
+    --c1: #3987e5; --c2: #d95926; --c3: #199e70; --c4: #c98500; --c5: #d55181; --c6: #008300; --c7: #9085e9; --c8: #6C7975;
+    --logo-bg: #EEF3F1; --shadow: 0 1px 2px rgba(0,0,0,.3); color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0F1D19; --surface: #162823; --surface-2: #1C312B; --fg: #EEF3F1; --muted: #A9B8B3; --line: #2A433C;
+  --band: #0B1714; --band-fg: #E6F0C2; --lime: #BEE500; --accent: #BEE500;
+  --up: #6FD08F; --up-bg: #183A26; --down: #FF7F7A; --down-bg: #3D1C1B;
+  --st-above: #3CBF6E; --st-line: #7E8C88; --st-below: #F06A69;
+  --map-0: #22362F; --map-1: #3B5A2C; --map-2: #6F8F12; --map-3: #B1D600;
+  --c1: #3987e5; --c2: #d95926; --c3: #199e70; --c4: #c98500; --c5: #d55181; --c6: #008300; --c7: #9085e9; --c8: #6C7975;
+  --logo-bg: #EEF3F1; --shadow: 0 1px 2px rgba(0,0,0,.3); color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  background: var(--bg); color: var(--fg);
+  font: 14px/1.45 var(--f-body);
+  padding-inline: clamp(16px, 2.2vw, 32px); padding-block: 0 40px;
+}
+.wrap { max-width: 1680px; margin: 0 auto; display: grid; gap: 22px; }
+h1, h2, h3 { margin: 0; text-wrap: balance; }
+button, input, select { font: inherit; color: inherit; }
+:focus-visible { outline: 3px solid var(--lime); outline-offset: 2px; }
+.num { font-variant-numeric: tabular-nums; }
+a { color: inherit; }
+
+/* ---------- En-tête ---------- */
+header.top { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 20px; padding-block: 18px 6px; }
+.logo { display: flex; align-items: center; background: var(--logo-bg); border-radius: 12px; padding: 6px 10px; }
+.logo img { display: block; }
+.logo.bb img { height: 70px; }
+.logo.wpp img { height: 30px; }
+.title { text-align: center; }
+.title h1 { font: 700 clamp(22px, 2.4vw, 34px)/1.1 var(--f-display); letter-spacing: -.01em; }
+.title h1 span { color: var(--accent); }
+.title p { margin: 4px 0 0; color: var(--muted); font-size: 13px; }
+
+.filters {
+  display: flex; flex-wrap: wrap; gap: 14px 18px; align-items: start;
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--r);
+  padding: 18px 24px; box-shadow: var(--shadow);
+}
+.field { display: grid; gap: 5px; min-width: 0; }
+.field label, .eyebrow { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.field input, .field select {
+  height: 40px; border: 1.5px solid var(--line); border-radius: 999px; background: var(--surface-2);
+  padding: 0 16px; min-width: 0; width: 100%;
+}
+.field input:focus, .field select:focus { border-color: var(--accent); outline: none; }
+.f-dep { flex: 0 1 240px; }
+.f-hotel { flex: 0 1 360px; }
+.f-ch { flex: 0 1 260px; }
+.f-period { flex: 0 1 auto; margin-right: auto; gap: 8px; }
+.period-row { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.chip {
+  height: 34px; padding: 0 14px; border-radius: 999px; border: 1.5px solid var(--line);
+  background: var(--surface-2); cursor: pointer; font-weight: 500; font-size: 13px;
+}
+.chip:hover { border-color: var(--accent); }
+.chip[aria-pressed="true"] { background: var(--fg); border-color: var(--fg); color: var(--bg); }
+.period-row select { width: auto; height: 36px; border-radius: 999px; border: 1.5px solid var(--line); background: var(--surface-2); padding: 0 10px; font-size: 13px; }
+.period-row .sep { color: var(--muted); }
+.btn-reset { height: 42px; padding: 0 22px; border-radius: 999px; border: 0; cursor: pointer; background: var(--lime); color: var(--lime-ink); font-weight: 700; font-family: var(--f-display); }
+.btn-reset:hover { filter: brightness(1.05); }
+.f-actions { flex: none; display: grid; gap: 14px; justify-items: end; }
+.f-theme { display: flex; align-items: center; gap: 14px; }
+.theme-sw { display: inline-flex; border: 1.5px solid var(--line); border-radius: 999px; background: var(--surface-2); padding: 3px; height: 40px; }
+.theme-sw button { border: 0; background: transparent; border-radius: 999px; padding: 0 14px; font-weight: 500; cursor: pointer; color: var(--muted); }
+.theme-sw button:hover { color: var(--fg); }
+.theme-sw button[aria-pressed="true"] { background: var(--fg); color: var(--bg); }
+.period-note { font-size: 12px; color: var(--muted); }
+
+/* ---------- Sections ---------- */
+section.block { display: grid; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; box-shadow: var(--shadow); }
+.band {
+  background: var(--band); color: var(--band-fg);
+  font: 600 16px/1.2 var(--f-display); letter-spacing: .01em;
+  padding: 12px 18px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+  border-bottom: 4px solid var(--lime);
+}
+.band small { font: 500 12px/1.2 var(--f-body); opacity: .85; }
+.grid-2 { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); }
+.grid-2 > * { min-width: 0; }
+.grid-2.obj { grid-template-columns: minmax(0, 4fr) minmax(0, 9fr); }
+.grid-2.chs { grid-template-columns: minmax(0, 6fr) minmax(0, 6fr); }
+.cell { padding: 18px; }
+.cell + .cell { border-left: 1px solid var(--line); }
+.sub { font: 600 14px/1.2 var(--f-display); display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+.sub::before { content: ""; width: 10px; height: 10px; border-radius: 50%; background: var(--lime); flex: none; }
+.note { font-size: 12.5px; color: var(--muted); margin: 0 0 14px; }
+.note b { color: var(--fg); }
+
+/* ---------- Carte ---------- */
+#map { width: 100%; height: auto; display: block; aspect-ratio: 1 / 0.95; touch-action: none; }
+#map path.dep { fill: var(--map-0); stroke: var(--surface); stroke-width: .8; cursor: pointer; }
+#map path.dep:hover { stroke: var(--fg); stroke-width: 1.4; }
+#map path.dep.sel { stroke: var(--fg); stroke-width: 2.2; }
+#map.has-sel path.dep:not(.sel) { opacity: .45; }
+#map circle.ht { stroke: var(--surface); cursor: pointer; fill-opacity: .9; }
+#map circle.ht.nodata { fill: var(--surface) !important; stroke: var(--muted); }
+#map circle.ht.out { opacity: .15; }
+#map circle.ht:hover { stroke: var(--fg); }
+#map .focus-ring { fill: none; stroke: var(--fg); }
+#map .focus-dot { fill: var(--lime); stroke: var(--fg); }
+@media (prefers-reduced-motion: no-preference) {
+  #map .focus-ring { animation: pulse 1.8s ease-out infinite; transform-box: fill-box; transform-origin: center; }
+  @keyframes pulse { from { opacity: .9; transform: scale(.6); } to { opacity: 0; transform: scale(1.8); } }
+}
+.map-tools { position: absolute; top: 0; left: 0; display: grid; gap: 4px; }
+.map-tools button { width: 32px; height: 32px; border-radius: 9px; border: 1px solid var(--line); background: var(--surface); cursor: pointer; font-weight: 700; font-size: 16px; line-height: 1; }
+.map-tools button:hover { border-color: var(--accent); }
+.legend { display: flex; align-items: center; gap: 6px 14px; font-size: 12px; color: var(--muted); flex-wrap: wrap; margin-top: 8px; }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend .ramp { width: 110px; height: 10px; border-radius: 6px; background: linear-gradient(90deg, var(--map-0), var(--map-1), var(--map-2), var(--map-3)); }
+.legend .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+.legend .dot.hollow { border: 1.5px solid var(--muted); }
+.dom { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; margin-top: 10px; font-size: 12px; color: var(--muted); }
+.dom button { border: 1.5px solid var(--line); background: var(--surface-2); border-radius: 999px; padding: 4px 10px; cursor: pointer; font-size: 12px; display: inline-flex; gap: 6px; align-items: center; }
+.dom button:hover { border-color: var(--accent); }
+.tip { position: fixed; pointer-events: none; z-index: 20; background: var(--fg); color: var(--bg); padding: 8px 11px; border-radius: 10px; font-size: 12px; line-height: 1.4; max-width: 280px; box-shadow: var(--shadow); }
+.tip b { font-weight: 700; }
+
+/* ---------- Fiche hôtel ---------- */
+.h-head { display: flex; gap: 14px; align-items: center; justify-content: space-between; flex-wrap: wrap; margin-bottom: 14px; }
+.h-id { display: flex; gap: 12px; align-items: center; min-width: 0; }
+.h-id img { width: 48px; height: 48px; flex: none; border-radius: 50%; }
+.h-id h2 { font: 700 21px/1.2 var(--f-display); }
+.h-id p { margin: 2px 0 0; color: var(--muted); font-size: 13px; }
+.lp { display: inline-flex; align-items: center; gap: 6px; height: 36px; padding: 0 16px; border-radius: 999px; background: var(--lime); color: var(--lime-ink); font-weight: 700; font-size: 13px; text-decoration: none; white-space: nowrap; }
+.lp:hover { filter: brightness(1.05); }
+.lp[hidden] { display: none; }
+.ids { display: grid; grid-template-columns: minmax(0, 1.7fr) repeat(3, minmax(0, 1fr)); gap: 8px; margin-bottom: 16px; }
+.ids div { background: var(--surface-2); border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; min-width: 0; }
+.ids dt { font-size: 10.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.ids dd { margin: 2px 0 0; font-weight: 700; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-variant-numeric: tabular-nums; }
+
+.kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.kpi { border: 1.5px solid var(--line); border-radius: 12px; padding: 12px; background: var(--surface-2); display: grid; gap: 6px; align-content: start; min-width: 0; }
+.kpi .val { font: 700 24px/1.1 var(--f-display); font-variant-numeric: tabular-nums; }
+.kpi .val small { font: 500 13px var(--f-body); color: var(--muted); }
+.kpi .meta { display: flex; gap: 6px; font-size: 11.5px; color: var(--muted); align-items: center; flex-wrap: wrap; }
+.gauge { height: 8px; border-radius: 6px; background: var(--line); position: relative; overflow: visible; }
+.gauge i { position: absolute; inset: 0 auto 0 0; border-radius: 6px; }
+.gauge b { position: absolute; top: -4px; bottom: -4px; width: 2px; background: var(--fg); left: 66.66%; }
+.pill { display: inline-flex; align-items: center; border-radius: 999px; padding: 2px 8px; font-weight: 700; font-size: 11.5px; white-space: nowrap; }
+.pill.up { color: var(--up); background: var(--up-bg); }
+.pill.down { color: var(--down); background: var(--down-bg); }
+.pill.flat { color: var(--muted); background: var(--surface); border: 1px solid var(--line); }
+.status { display: inline-flex; align-items: center; gap: 6px; font-weight: 700; font-size: 12px; white-space: nowrap; }
+.status i { width: 9px; height: 9px; border-radius: 50%; display: inline-block; flex: none; }
+
+.evo { margin-top: 18px; }
+.evo-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 8px; }
+.evo-head .sub { margin: 0; }
+.seg { display: inline-flex; border: 1.5px solid var(--line); border-radius: 999px; padding: 2px; background: var(--surface-2); }
+.seg button { border: 0; background: transparent; border-radius: 999px; padding: 4px 12px; cursor: pointer; font-size: 12px; font-weight: 500; color: var(--muted); }
+.seg button[aria-pressed="true"] { background: var(--fg); color: var(--bg); }
+.chart-box { position: relative; height: 280px; }
+.ch-legend { display: flex; gap: 6px 14px; flex-wrap: wrap; font-size: 12px; color: var(--muted); margin-top: 8px; }
+.ch-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.ch-legend i { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
+
+/* ---------- Objectif ---------- */
+.tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.tile { border-radius: 12px; padding: 14px 16px; display: grid; gap: 4px; min-width: 0; border: 1.5px solid var(--line); background: var(--surface-2); }
+.tile .tval { font: 700 28px/1.1 var(--f-display); font-variant-numeric: tabular-nums; }
+.tile .tmeta { font-size: 12px; color: var(--muted); }
+.tile.hero { grid-column: 1 / -1; background: var(--fg); color: var(--bg); border-color: var(--fg); }
+.tile.hero .eyebrow, .tile.hero .tmeta { color: color-mix(in srgb, var(--bg) 75%, transparent); }
+.tile.hero .tval { color: var(--lime); }
+:root[data-theme="dark"] .tile.hero .tval { color: #183029; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .tile.hero .tval { color: #183029; } }
+.tile .eyebrow { display: flex; align-items: center; gap: 6px; }
+.lists { margin-top: 18px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.lists > div, .lists ol, .lists li { min-width: 0; }
+.lists ol { margin: 0; padding: 0; list-style: none; display: grid; gap: 4px; }
+.lists li button { width: 100%; display: flex; justify-content: space-between; gap: 8px; border: 0; background: var(--surface-2); border-radius: 8px; padding: 6px 9px; cursor: pointer; font-size: 12.5px; text-align: left; }
+.lists li button:hover { background: color-mix(in srgb, var(--lime) 22%, var(--surface)); }
+.lists li span:first-child { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.lists li span:last-child { font-weight: 700; font-variant-numeric: tabular-nums; flex: none; }
+.lists .sub { font-size: 13px; margin-bottom: 8px; }
+
+.table-tools { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+.table-tools input { height: 36px; border-radius: 999px; border: 1.5px solid var(--line); background: var(--surface-2); padding: 0 14px; width: min(260px, 100%); }
+.table-tools .count { font-size: 12px; color: var(--muted); }
+.tbl { position: relative; overflow: auto; max-height: 640px; border: 1px solid var(--line); border-radius: 10px; }
+table { border-collapse: collapse; width: 100%; font-size: 12.5px; }
+thead th {
+  position: sticky; top: 0; z-index: 1; background: var(--band); color: var(--band-fg);
+  font-size: 11px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase;
+  padding: 10px 6px; text-align: right; white-space: nowrap; cursor: pointer; user-select: none;
+}
+thead th.l { text-align: left; }
+thead th[aria-sort="descending"]::after { content: " ▼"; font-size: 9px; }
+thead th[aria-sort="ascending"]::after { content: " ▲"; font-size: 9px; }
+tbody td { padding: 7px 6px; border-bottom: 1px solid var(--line); text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+tbody td.l { text-align: left; }
+tbody td.nm { font-weight: 700; max-width: 190px; overflow: hidden; text-overflow: ellipsis; }
+tbody td.rk { color: var(--muted); font-weight: 700; width: 1%; }
+tbody tr { cursor: pointer; }
+tbody tr:nth-child(even) { background: var(--surface-2); }
+tbody tr:hover { background: color-mix(in srgb, var(--lime) 16%, var(--surface)); }
+tbody tr.cur { background: color-mix(in srgb, var(--lime) 30%, var(--surface)); }
+
+/* ---------- Channels ---------- */
+.ch-cards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.ch-card { border: 1.5px solid var(--line); border-radius: 12px; padding: 10px 12px; background: var(--surface-2); display: grid; gap: 4px; cursor: pointer; text-align: left; min-width: 0; }
+.ch-card:hover { border-color: var(--accent); }
+.ch-card[aria-pressed="true"] { border-color: var(--fg); box-shadow: inset 0 0 0 1px var(--fg); background: var(--surface); }
+.ch-card .eyebrow { display: flex; align-items: center; gap: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ch-card .eyebrow i { width: 9px; height: 9px; border-radius: 3px; flex: none; }
+.ch-card .cval { font: 700 20px/1.1 var(--f-display); font-variant-numeric: tabular-nums; }
+.ch-card .meta { display: flex; justify-content: space-between; gap: 6px; font-size: 11.5px; color: var(--muted); align-items: center; flex-wrap: wrap; }
+.ch-detail { margin-top: 16px; }
+.ch-detail .tbl { max-height: 420px; }
+.top10 .chart-box { height: 330px; }
+
+footer { color: var(--muted); font-size: 12px; text-align: center; }
+
+@media (max-width: 1280px) {
+  .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ch-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 1020px) {
+  .grid-2, .grid-2.obj, .grid-2.chs { grid-template-columns: 1fr; }
+  .cell + .cell { border-left: 0; border-top: 1px solid var(--line); }
+}
+@media (max-width: 640px) {
+  header.top { grid-template-columns: 1fr 1fr; }
+  .title { grid-column: 1 / -1; grid-row: 2; }
+  .logo.wpp { justify-self: end; }
+  .logo.bb img { height: 52px; } .logo.wpp img { height: 22px; }
+  .ids { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .kpis, .tiles, .lists { grid-template-columns: 1fr; }
+  .f-dep, .f-hotel, .f-ch { flex-basis: 100%; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="logo bb"><img src="__LOGO_BB__" alt="B&amp;B HOTELS"></div>
+    <div class="title">
+      <h1>Cockpit performance <span>hôtels</span></h1>
+      <p id="subtitle">Revenus digitaux par channel · données mensuelles</p>
+    </div>
+    <div class="logo wpp"><img src="__LOGO_WPP__" alt="WPP Media"></div>
+  </header>
+
+  <form class="filters" id="filters" autocomplete="off" onsubmit="return false">
+    <div class="field f-dep">
+      <label for="in-dep">Département</label>
+      <input id="in-dep" list="dl-dep" placeholder="Toute la France — nom ou n°">
+      <datalist id="dl-dep"></datalist>
+    </div>
+    <div class="field f-hotel">
+      <label for="in-hotel">Hôtel</label>
+      <input id="in-hotel" list="dl-hotel" placeholder="Nom, ville, code postal ou ID">
+      <datalist id="dl-hotel"></datalist>
+    </div>
+    <div class="field f-ch">
+      <label for="sel-ch">Channel</label>
+      <select id="sel-ch"></select>
+    </div>
+    <div class="field f-period">
+      <label for="sel-from">Période</label>
+      <div class="period-row" id="presets">
+        <button type="button" class="chip" data-m="1">Dernier mois</button>
+        <button type="button" class="chip" data-m="3">3 mois</button>
+        <button type="button" class="chip" data-m="6">6 mois</button>
+        <button type="button" class="chip" data-m="12">12 mois</button>
+        <button type="button" class="chip" data-m="ytd">Année en cours</button>
+      </div>
+      <div class="period-row">
+        <select id="sel-from" aria-label="Mois de début"></select>
+        <span class="sep">→</span>
+        <select id="sel-to" aria-label="Mois de fin"></select>
+      </div>
+      <span class="period-note" id="period-note"></span>
+    </div>
+    <div class="f-actions">
+      <div class="f-theme">
+        <span class="eyebrow" id="lbl-theme">Affichage</span>
+        <div class="theme-sw" id="theme-sw" role="group" aria-labelledby="lbl-theme">
+          <button type="button" data-t="auto" title="Suit le réglage de l'ordinateur">Auto</button>
+          <button type="button" data-t="light">Clair</button>
+          <button type="button" data-t="dark">Sombre</button>
+        </div>
+      </div>
+      <button type="button" class="btn-reset" id="btn-reset">Réinitialiser</button>
+    </div>
+  </form>
+
+  <!-- 1. Carte + fiche -->
+  <section class="block" aria-labelledby="t-net">
+    <div class="band"><span id="t-net">Réseau &amp; fiche hôtel</span><small id="scope-1"></small></div>
+    <div class="grid-2">
+      <div class="cell">
+        <div class="sub">Carte du réseau</div>
+        <div style="position:relative">
+          <svg id="map" viewBox="0 0 600 570" role="img" aria-label="Carte des hôtels B&amp;B par département"></svg>
+          <div class="map-tools">
+            <button type="button" id="z-in" aria-label="Zoomer">+</button>
+            <button type="button" id="z-out" aria-label="Dézoomer">−</button>
+            <button type="button" id="z-fr" aria-label="Revenir à la France entière" title="France entière">⌂</button>
+          </div>
+        </div>
+        <div class="legend">
+          <span><span class="ramp"></span> Revenu du département</span>
+        </div>
+        <div class="legend" id="map-legend"></div>
+        <div class="dom" id="dom"></div>
+      </div>
+      <div class="cell">
+        <div class="h-head">
+          <div class="h-id">
+            <img src="__LOGO_BB__" alt="">
+            <div style="min-width:0">
+              <h2 id="h-name">—</h2>
+              <p id="h-addr"></p>
+            </div>
+          </div>
+          <a class="lp" id="h-lp" target="_blank" rel="noopener" hidden>Page hôtel ↗</a>
+        </div>
+        <dl class="ids" id="h-ids"></dl>
+        <div class="kpis" id="kpis"></div>
+        <div class="evo">
+          <div class="evo-head">
+            <div class="sub" id="evo-title">Revenu mensuel par channel</div>
+            <div class="seg" id="evo-mode" role="group" aria-label="Unité du graphique">
+              <button type="button" data-v="eur" aria-pressed="true">€</button>
+              <button type="button" data-v="pct" aria-pressed="false">% du total</button>
+            </div>
+          </div>
+          <div class="chart-box"><canvas id="c-area" aria-label="Revenu mensuel empilé par channel"></canvas></div>
+          <div class="ch-legend" id="area-legend"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. Objectif -->
+  <section class="block" aria-labelledby="t-obj">
+    <div class="band"><span id="t-obj">Objectif du mois</span><small id="scope-2"></small></div>
+    <div class="grid-2 obj">
+      <div class="cell">
+        <div class="sub">Revenu digital vs objectif</div>
+        <p class="note" id="obj-note"></p>
+        <div class="tiles" id="obj-tiles"></div>
+        <div class="lists">
+          <div><div class="sub">Meilleurs indices</div><ol id="l-top"></ol></div>
+          <div><div class="sub">Plus faibles indices</div><ol id="l-low"></ol></div>
+        </div>
+      </div>
+      <div class="cell">
+        <div class="table-tools">
+          <div class="sub" style="margin:0">Détail par hôtel</div>
+          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+            <span class="count" id="t-count"></span>
+            <input id="t-search" type="search" placeholder="Filtrer le tableau" aria-label="Filtrer le tableau">
+          </div>
+        </div>
+        <div class="tbl">
+          <table id="tbl">
+            <thead><tr>
+              <th data-k="rk" class="l">#</th>
+              <th data-k="n" class="l">Hôtel</th>
+              <th data-k="obj" title="Obj Room Rev Mois (objectif de revenu chambres, tous canaux)">Obj. Room Rev</th>
+              <th data-k="rev">Revenu digital</th>
+              <th data-k="cov" title="Revenu digital du mois / Obj Room Rev Mois">Couverture</th>
+              <th data-k="tgt" title="Obj Room Rev Mois × couverture moyenne du réseau">Obj. digital</th>
+              <th data-k="gap">Écart</th>
+              <th data-k="idx">Indice</th>
+              <th data-k="yoy">vs N-1</th>
+            </tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. Channels -->
+  <section class="block" aria-labelledby="t-ch">
+    <div class="band"><span id="t-ch">Volet par channel média</span><small id="scope-3"></small></div>
+    <div class="grid-2 chs">
+      <div class="cell">
+        <div class="sub">Familles de channels — cliquez pour filtrer le cockpit</div>
+        <div class="ch-cards" id="ch-cards"></div>
+        <div class="ch-detail">
+          <div class="sub">Détail des channels</div>
+          <div class="tbl">
+            <table id="tbl-ch">
+              <thead><tr>
+                <th class="l">Channel</th><th class="l">Famille</th><th>Revenu</th><th>Part</th><th>vs préc.</th><th>vs N-1</th>
+              </tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="cell">
+        <div class="evo-head">
+          <div class="sub" id="share-title">Part du channel dans le revenu digital</div>
+        </div>
+        <div class="chart-box" style="height:230px"><canvas id="c-share" aria-label="Part mensuelle du channel sélectionné"></canvas></div>
+        <div class="top10" style="margin-top:18px">
+          <div class="sub" id="top10-title">Top 10 hôtels</div>
+          <div class="chart-box"><canvas id="c-top10" aria-label="Dix hôtels au plus fort revenu"></canvas></div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <footer id="foot"></footer>
+</div>
+<div class="tip" id="tip" hidden></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>
+const DATA = __DATA__;
+const GEO = __GEO__;
+
+const $ = (id) => document.getElementById(id);
+const css = (v) => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const nf = new Intl.NumberFormat("fr-FR");
+const fmt = (v) => v == null || !isFinite(v) ? "—" : nf.format(Math.round(v));
+const eur = (v) => v == null || !isFinite(v) ? "—" : Math.abs(v) >= 1e6 ? (v / 1e6).toLocaleString("fr-FR", { maximumFractionDigits: 2 }) + " M€" : Math.abs(v) >= 1e4 ? (v / 1e3).toLocaleString("fr-FR", { maximumFractionDigits: 0 }) + " k€" : nf.format(Math.round(v)) + " €";
+const pct = (v, d = 1) => v == null || !isFinite(v) ? "—" : (v * 100).toLocaleString("fr-FR", { maximumFractionDigits: d, minimumFractionDigits: d }) + " %";
+const evo = (v) => v == null || !isFinite(v) ? "—" : (v > 0 ? "+" : "") + pct(v);
+const pill = (v) => `<span class="pill ${v == null || !isFinite(v) ? "flat" : v > 0.0005 ? "up" : v < -0.0005 ? "down" : "flat"}">${evo(v)}</span>`;
+const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+const ratio = (a, b) => b ? a / b - 1 : null;
+
+// ---------- Données ----------
+const MONTHS = DATA.months.map((m) => {
+  const d = new Date(m + "-01T00:00:00");
+  return { m, d, short: d.toLocaleDateString("fr-FR", { month: "short", year: "2-digit" }), long: d.toLocaleDateString("fr-FR", { month: "long", year: "numeric" }) };
+});
+const NM = MONTHS.length, LAST = NM - 1;
+const CH = DATA.channels;                       // [{n, g}]
+const GR = DATA.groups.map((g, i) => ({ ...g, i, color: `--c${i + 1}` }));
+const GIDX = Object.fromEntries(GR.map((g) => [g.k, g.i]));
+CH.forEach((c) => { c.gi = GIDX[c.g]; });
+const H = DATA.hotels;
+const zeros = () => new Array(NM).fill(0);
+H.forEach((h, i) => {
+  h.i = i;
+  h.tot = zeros();
+  h.grp = GR.map(zeros);
+  h.chs = {};
+  for (const [k, arr] of Object.entries(h.r)) {
+    const c = +k; h.chs[c] = arr;
+    arr.forEach((v, m) => { h.tot[m] += v; h.grp[CH[c].gi][m] += v; });
+  }
+  h.metro = !!h.d && !h.d.startsWith("97");
+});
+
+// Objectif : Obj Room Rev Mois = objectif de revenu chambres (tous canaux), appliqué au dernier mois.
+// Le revenu digital n'en couvre qu'une partie : on en déduit un objectif digital implicite
+// = objectif × couverture moyenne du réseau, et un indice = revenu / objectif digital implicite × 100.
+const OBJ_H = H.filter((h) => h.obj);
+const NET_REV = OBJ_H.reduce((a, h) => a + h.tot[LAST], 0);
+const NET_OBJ = OBJ_H.reduce((a, h) => a + h.obj, 0);
+const COVER = NET_REV / NET_OBJ;
+H.forEach((h) => {
+  h.rev = h.tot[LAST];
+  h.cov = h.obj ? h.rev / h.obj : null;
+  h.tgt = h.obj ? h.obj * COVER : null;
+  h.gap = h.obj ? h.rev - h.tgt : null;
+  h.idx = h.obj ? (h.rev / h.tgt) * 100 : null;
+  h.yoy = LAST >= 12 ? ratio(h.rev, h.tot[LAST - 12]) : null;
+  h.stat = h.idx == null ? "nd" : h.idx >= 105 ? "above" : h.idx >= 95 ? "line" : "below";
+});
+const ST = {
+  above: { label: "Au-dessus", color: "--st-above" },
+  line: { label: "En ligne", color: "--st-line" },
+  below: { label: "En dessous", color: "--st-below" },
+  nd: { label: "Objectif non renseigné", color: "--muted" },
+};
+const status = (s) => `<span class="status"><i style="background:var(${ST[s].color})"></i>${ST[s].label}</span>`;
+
+// ---------- État ----------
+const state = { dep: null, hotel: null, ch: "", f: LAST, t: LAST, preset: "1", evoMode: "eur", sortK: "idx", sortDir: -1, q: "" };
+
+// Revenu d'un hôtel pour le channel filtré, mois m
+function chSeries(h) {
+  if (!state.ch) return h.tot;
+  const [type, key] = state.ch.split(":");
+  if (type === "g") return h.grp[+key];
+  return h.chs[+key] || zeros();
+}
+const sumR = (arr, f, t) => { let x = 0; for (let i = f; i <= t; i++) x += arr[i]; return x; };
+function prevPeriod() {
+  const len = state.t - state.f + 1, pf = state.f - len;
+  return pf >= 0 ? [pf, state.f - 1] : null;
+}
+function yoyPeriod() { return state.f - 12 >= 0 ? [state.f - 12, state.t - 12] : null; }
+function scopeHotels() { return state.dep ? H.filter((h) => h.d === state.dep) : H; }
+function chLabel() {
+  if (!state.ch) return "Tous channels";
+  const [type, key] = state.ch.split(":");
+  return type === "g" ? GR[+key].n : CH[+key].n;
+}
+function periodLabel() {
+  return state.f === state.t ? MONTHS[state.f].long : `${MONTHS[state.f].short} → ${MONTHS[state.t].short}`;
+}
+
+// ---------- Filtres ----------
+const depLabel = (c) => `${c} — ${DATA.deps[c] || "Outre-mer"}`;
+const hotelLabel = (h) => `${h.n} — ${h.cp} ${h.t} (#${h.vb})`;
+const usedDeps = [...new Set(H.map((h) => h.d).filter(Boolean))].sort();
+$("dl-dep").innerHTML = usedDeps.map((c) => `<option value="${esc(depLabel(c))}">`).join("");
+function fillHotelList() {
+  $("dl-hotel").innerHTML = scopeHotels().map((h) => `<option value="${esc(hotelLabel(h))}">`).join("");
+}
+function parseDep(v) {
+  v = v.trim().toLowerCase();
+  if (!v) return null;
+  const code = v.split(" — ")[0].toUpperCase();
+  if (usedDeps.includes(code)) return code;
+  if (/^\d$/.test(v) && usedDeps.includes("0" + v)) return "0" + v;
+  return usedDeps.find((c) => (DATA.deps[c] || "").toLowerCase() === v) || usedDeps.find((c) => (DATA.deps[c] || "").toLowerCase().startsWith(v)) || undefined;
+}
+function parseHotel(v) {
+  v = v.trim();
+  if (!v) return null;
+  const exact = H.find((h) => hotelLabel(h) === v);
+  if (exact) return exact.i;
+  const lv = v.toLowerCase();
+  const m = scopeHotels().filter((h) => `${h.n} ${h.cp} ${h.t} ${h.c} ${h.vb} ${h.pim} ${h.pms}`.toLowerCase().includes(lv));
+  return m.length === 1 ? m[0].i : undefined;
+}
+$("in-dep").addEventListener("change", (e) => { const c = parseDep(e.target.value); if (c !== undefined) setDep(c); });
+$("in-hotel").addEventListener("change", (e) => { const i = parseHotel(e.target.value); if (i !== undefined) setHotel(i); });
+
+// Channel : familles puis channels détaillés
+$("sel-ch").innerHTML = `<option value="">Tous channels</option>` +
+  `<optgroup label="Familles">${GR.map((g) => `<option value="g:${g.i}">${esc(g.n)}</option>`).join("")}</optgroup>` +
+  `<optgroup label="Channels détaillés">${CH.map((c, i) => `<option value="c:${i}">${esc(c.n)}</option>`).join("")}</optgroup>`;
+$("sel-ch").addEventListener("change", (e) => setCh(e.target.value));
+function setCh(v) { state.ch = v; $("sel-ch").value = v; render(); }
+
+// Période
+const monthOpts = MONTHS.map((m, i) => `<option value="${i}">${m.long}</option>`).join("");
+$("sel-from").innerHTML = monthOpts; $("sel-to").innerHTML = monthOpts;
+function setPeriod(f, t, preset = null) {
+  state.f = Math.max(0, Math.min(f, t)); state.t = Math.max(f, t); state.preset = preset;
+  render();
+}
+$("presets").addEventListener("click", (e) => {
+  const b = e.target.closest("button"); if (!b) return;
+  const p = b.dataset.m;
+  const f = p === "ytd" ? MONTHS.findIndex((m) => m.d.getFullYear() === MONTHS[LAST].d.getFullYear()) : LAST - (+p) + 1;
+  setPeriod(Math.max(0, f), LAST, p);
+});
+$("sel-from").addEventListener("change", (e) => setPeriod(+e.target.value, state.t));
+$("sel-to").addEventListener("change", (e) => setPeriod(state.f, +e.target.value));
+
+$("btn-reset").onclick = () => {
+  Object.assign(state, { dep: null, hotel: null, ch: "", f: LAST, t: LAST, preset: "1", q: "" });
+  $("in-dep").value = ""; $("in-hotel").value = ""; $("sel-ch").value = ""; $("t-search").value = "";
+  fillHotelList(); render(); zoomTo(null);
+};
+function setDep(code) {
+  state.dep = code; $("in-dep").value = code ? depLabel(code) : "";
+  if (state.hotel != null && code && H[state.hotel].d !== code) { state.hotel = null; $("in-hotel").value = ""; }
+  fillHotelList(); render(); zoomTo(code);
+}
+function setHotel(i) {
+  state.hotel = i;
+  $("in-hotel").value = i == null ? "" : hotelLabel(H[i]);
+  if (i != null && state.dep && H[i].d !== state.dep) { state.dep = null; $("in-dep").value = ""; fillHotelList(); }
+  render();
+  if (i != null && H[i].lat != null && H[i].metro) focusHotel(H[i]);
+}
+
+// ---------- Carte ----------
+const svg = d3.select("#map");
+const VW = 600, VH = 570;
+const metroGeo = { type: "FeatureCollection", features: GEO.features };
+const proj = d3.geoConicConformal().parallels([44, 49]).rotate([-3, 0]).fitExtent([[10, 10], [VW - 10, VH - 10]], metroGeo);
+const path = d3.geoPath(proj);
+const gRoot = svg.append("g");
+const gDep = gRoot.append("g");
+const gHt = gRoot.append("g");
+const gFocus = gRoot.append("g");
+let curK = 1;
+gDep.selectAll("path").data(GEO.features).join("path")
+  .attr("class", "dep").attr("d", path)
+  .on("click", (e, f) => setDep(state.dep === f.properties.code ? null : f.properties.code))
+  .on("mousemove", (e, f) => showTip(e, depTip(f.properties.code)))
+  .on("mouseleave", hideTip);
+H.filter((h) => h.metro && h.lat != null).forEach((h) => { [h.x, h.y] = proj([h.lng, h.lat]); });
+const dots = gHt.selectAll("circle").data(H.filter((h) => h.x != null)).join("circle")
+  .attr("class", "ht").attr("cx", (h) => h.x).attr("cy", (h) => h.y)
+  .on("click", (e, h) => { e.stopPropagation(); setHotel(h.i); })
+  .on("mousemove", (e, h) => showTip(e, hotelTip(h)))
+  .on("mouseleave", hideTip);
+
+// Molette = défilement de la page ; Ctrl + molette = zoom carte
+const zoom = d3.zoom().filter((e) => (e.type !== "wheel" || e.ctrlKey) && !e.button).scaleExtent([1, 24]).translateExtent([[0, 0], [VW, VH]]).on("zoom", (e) => {
+  gRoot.attr("transform", e.transform); curK = e.transform.k; sizeMarks();
+});
+svg.call(zoom).on("dblclick.zoom", null);
+let rScale = () => 3;
+function sizeMarks() {
+  dots.attr("r", (h) => rScale(h) / Math.sqrt(curK)).attr("stroke-width", 0.8 / curK);
+  gDep.selectAll("path").attr("stroke-width", null);
+  gFocus.selectAll(".focus-dot").attr("r", 6 / Math.sqrt(curK)).attr("stroke-width", 2 / curK);
+  gFocus.selectAll(".focus-ring").attr("r", 14 / Math.sqrt(curK)).attr("stroke-width", 2 / curK);
+}
+function zoomTo(code) {
+  const T = svg.transition().duration(500);
+  if (!code) { zoom.transform(T, d3.zoomIdentity); return; }
+  const f = GEO.features.find((x) => x.properties.code === code);
+  if (!f) return;
+  const [[x0, y0], [x1, y1]] = path.bounds(f);
+  const k = Math.min(10, 0.85 / Math.max((x1 - x0) / VW, (y1 - y0) / VH));
+  zoom.transform(T, d3.zoomIdentity.translate(VW / 2, VH / 2).scale(k).translate(-(x0 + x1) / 2, -(y0 + y1) / 2));
+}
+function focusHotel(h) {
+  if (curK < 2.5 && !state.dep) {
+    const k = 4;
+    zoom.transform(svg.transition().duration(500), d3.zoomIdentity.translate(VW / 2, VH / 2).scale(k).translate(-h.x, -h.y));
+  }
+}
+$("z-in").onclick = () => zoom.scaleBy(svg.transition().duration(300), 1.6);
+$("z-out").onclick = () => zoom.scaleBy(svg.transition().duration(300), 1 / 1.6);
+$("z-fr").onclick = () => { if (state.dep) setDep(null); else zoomTo(null); };
+
+const tip = $("tip");
+function showTip(e, html) {
+  tip.innerHTML = html; tip.hidden = false;
+  const r = tip.getBoundingClientRect();
+  let x = e.clientX + 14, y = e.clientY + 14;
+  if (x + r.width > innerWidth - 8) x = e.clientX - r.width - 14;
+  if (y + r.height > innerHeight - 8) y = e.clientY - r.height - 14;
+  tip.style.left = x + "px"; tip.style.top = y + "px";
+}
+function hideTip() { tip.hidden = true; }
+let depRev = {};
+function depTip(code) {
+  const n = H.filter((h) => h.d === code).length;
+  return `<b>${esc(depLabel(code))}</b><br>${n} hôtel${n > 1 ? "s" : ""} · ${eur(depRev[code] || 0)}<br><span style="opacity:.8">${esc(chLabel())} · ${esc(periodLabel())}</span>`;
+}
+function hotelTip(h) {
+  return `<b>${esc(h.n)}</b><br>${esc(h.cp)} ${esc(h.t)}<br>${esc(chLabel())} : ${eur(sumR(chSeries(h), state.f, state.t))}` +
+    `<br>Indice objectif ${MONTHS[LAST].short} : ${h.idx == null ? "—" : fmt(h.idx)} · ${ST[h.stat].label}`;
+}
+
+function renderMap() {
+  depRev = {};
+  H.forEach((h) => { if (h.d) depRev[h.d] = (depRev[h.d] || 0) + sumR(chSeries(h), state.f, state.t); });
+  const vals = Object.values(depRev).filter((v) => v > 0).sort(d3.ascending);
+  const q = (p) => d3.quantile(vals, p) || 0;
+  const t1 = q(0.33), t2 = q(0.66);
+  const c0 = css("--map-0"), c1 = css("--map-1"), c2 = css("--map-2"), c3 = css("--map-3");
+  gDep.selectAll("path")
+    .style("fill", (f) => { const v = depRev[f.properties.code] || 0; return v <= 0 ? c0 : v < t1 ? c1 : v < t2 ? c2 : c3; })
+    .classed("sel", (f) => f.properties.code === state.dep);
+  svg.classed("has-sel", !!state.dep);
+
+  const rev = new Map(H.map((h) => [h.i, sumR(chSeries(h), state.f, state.t)]));
+  const maxR = d3.max(rev.values()) || 1;
+  const rs = d3.scaleSqrt().domain([0, maxR]).range([2, 9]);
+  rScale = (h) => rs(rev.get(h.i) || 0);
+  dots.attr("fill", (h) => css(ST[h.stat].color))
+    .classed("nodata", (h) => h.stat === "nd")
+    .classed("out", (h) => state.dep && h.d !== state.dep);
+  gFocus.selectAll("*").remove();
+  const fh = state.hotel != null ? H[state.hotel] : null;
+  if (fh && fh.x != null) {
+    gFocus.append("circle").attr("class", "focus-ring").attr("cx", fh.x).attr("cy", fh.y);
+    gFocus.append("circle").attr("class", "focus-dot").attr("cx", fh.x).attr("cy", fh.y);
+  }
+  sizeMarks();
+  $("map-legend").innerHTML = `<span>Indice objectif ${esc(MONTHS[LAST].short)} :</span>` +
+    ["above", "line", "below"].map((s) => `<span><i class="dot" style="background:var(${ST[s].color})"></i>${ST[s].label}</span>`).join("") +
+    `<span><i class="dot hollow"></i>Sans objectif</span><span>· taille = revenu de la période</span>`;
+  const dom = H.filter((h) => !h.metro);
+  $("dom").innerHTML = dom.length ? `<span>Outre-mer :</span>` + dom.map((h) =>
+    `<button type="button" data-i="${h.i}"><i class="dot" style="width:9px;height:9px;border-radius:50%;background:var(${ST[h.stat].color})"></i>${esc(h.n.replace(/^B&B (HOTEL|HOME)\s*/, ""))}</button>`).join("") : "";
+}
+$("dom").addEventListener("click", (e) => { const b = e.target.closest("button"); if (b) setHotel(+b.dataset.i); });
+
+// ---------- Graphiques ----------
+Chart.defaults.font.family = getComputedStyle(document.body).fontFamily;
+let chArea, chShare, chTop;
+function baseOpts(extra = {}) {
+  const grid = css("--line"), muted = css("--muted");
+  return {
+    responsive: true, maintainAspectRatio: false, animation: { duration: 250 },
+    interaction: { mode: "index", intersect: false },
+    plugins: {
+      legend: { display: false },
+      tooltip: { backgroundColor: css("--fg"), titleColor: css("--bg"), bodyColor: css("--bg"), padding: 10, cornerRadius: 10, boxPadding: 4, usePointStyle: true },
+    },
+    scales: {
+      x: { grid: { display: false }, ticks: { color: muted }, border: { color: grid } },
+      y: { grid: { color: grid }, ticks: { color: muted }, border: { display: false }, beginAtZero: true },
+    },
+    ...extra,
+  };
+}
+
+// Séries empilées : familles (tous channels), channels de la famille, ou channel seul
+function areaSeries(list) {
+  const agg = (fn) => { const a = zeros(); list.forEach((h) => fn(h).forEach((v, m) => { a[m] += v; })); return a; };
+  if (!state.ch) return GR.map((g) => ({ label: g.n, color: css(g.color), data: agg((h) => h.grp[g.i]) }));
+  const [type, key] = state.ch.split(":");
+  if (type === "g") {
+    const g = GR[+key];
+    const members = CH.map((c, i) => ({ c, i })).filter((x) => x.c.gi === g.i);
+    return members.map((x, j) => ({ label: x.c.n, color: css(GR[j % GR.length].color), data: agg((h) => h.chs[x.i] || zeros()) }));
+  }
+  const c = CH[+key];
+  return [{ label: c.n, color: css(GR[c.gi].color), data: agg((h) => h.chs[+key] || zeros()) }];
+}
+function drawArea(list) {
+  let series = areaSeries(list).filter((s) => s.data.some((v) => v));
+  const totals = zeros(); series.forEach((s) => s.data.forEach((v, m) => { totals[m] += v; }));
+  const asPct = state.evoMode === "pct";
+  const surf = css("--surface");
+  const labels = MONTHS.map((m) => m.short);
+  const datasets = series.map((s) => ({
+    label: s.label,
+    data: s.data.map((v, m) => asPct ? (totals[m] ? (v / totals[m]) * 100 : 0) : v),
+    borderColor: surf, borderWidth: 2, backgroundColor: s.color, fill: true, pointRadius: 0, pointHoverRadius: 4,
+    pointBackgroundColor: s.color, tension: 0.25,
+  }));
+  // Période sélectionnée surlignée
+  const band = { id: "band", beforeDraw(c) {
+    const { ctx, chartArea: a, scales: { x } } = c;
+    if (state.f === 0 && state.t === LAST) return;
+    const x0 = x.getPixelForValue(state.f) - (state.f === state.t ? 8 : 0), x1 = x.getPixelForValue(state.t) + (state.f === state.t ? 8 : 0);
+    ctx.save(); ctx.fillStyle = css("--lime"); ctx.globalAlpha = .18; ctx.fillRect(x0, a.top, Math.max(2, x1 - x0), a.bottom - a.top); ctx.restore();
+  } };
+  chArea?.destroy();
+  chArea = new Chart($("c-area"), {
+    type: "line", data: { labels, datasets }, plugins: [band],
+    options: baseOpts({
+      plugins: {
+        legend: { display: false },
+        tooltip: { ...baseOpts().plugins.tooltip, itemSort: (a, b) => b.datasetIndex - a.datasetIndex,
+          callbacks: {
+            label: (c) => ` ${c.dataset.label} : ${asPct ? pct(c.parsed.y / 100) : eur(c.parsed.y)}`,
+            footer: (items) => asPct ? "" : `Total : ${eur(items.reduce((a, i) => a + i.parsed.y, 0))}`,
+          } },
+      },
+      scales: {
+        x: baseOpts().scales.x,
+        y: { ...baseOpts().scales.y, stacked: true, max: asPct ? 100 : undefined, ticks: { color: css("--muted"), callback: (v) => asPct ? v + " %" : eur(v) } },
+      },
+    }),
+  });
+  $("area-legend").innerHTML = series.map((s) => `<span><i style="background:${s.color}"></i>${esc(s.label)}</span>`).join("");
+}
+$("evo-mode").addEventListener("click", (e) => {
+  const b = e.target.closest("button"); if (!b) return;
+  state.evoMode = b.dataset.v;
+  $("evo-mode").querySelectorAll("button").forEach((x) => x.setAttribute("aria-pressed", x === b));
+  render();
+});
+
+// ---------- Rendu ----------
+function render() {
+  // Contrôles
+  document.querySelectorAll("#presets .chip").forEach((b) => b.setAttribute("aria-pressed", b.dataset.m === state.preset));
+  $("sel-from").value = state.f; $("sel-to").value = state.t;
+  const pp = prevPeriod(), yp = yoyPeriod();
+  $("period-note").textContent = `${periodLabel()} · comparaisons : ${pp ? "période précédente" : ""}${pp && yp ? " et " : ""}${yp ? "N-1" : ""}${!pp && !yp ? "aucune (historique insuffisant)" : ""}`;
+  const scope = scopeHotels();
+  const scopeName = state.dep ? depLabel(state.dep) : "France entière";
+  const sl = `${scopeName} · ${chLabel()} · ${periodLabel()}`;
+  $("scope-1").textContent = sl; $("scope-3").textContent = `${scopeName} · ${periodLabel()}`;
+  $("scope-2").textContent = `${scopeName} · ${MONTHS[LAST].long} · tous channels`;
+  $("t-obj").textContent = `Objectif ${MONTHS[LAST].long}`;
+  renderMap();
+  renderFiche(scope, scopeName);
+  renderObjective(scope);
+  renderChannels(scope);
+  $("foot").textContent = `${H.length} hôtels · ${CH.length} channels · données ${MONTHS[0].long} → ${MONTHS[LAST].long} · couverture réseau de l'objectif ${pct(COVER)} · B&B HOTELS × WPP Media`;
+}
+
+function renderFiche(scope, scopeName) {
+  const h = state.hotel != null ? H[state.hotel] : null;
+  const list = h ? [h] : scope;
+  const pp = prevPeriod(), yp = yoyPeriod();
+  const tot = (fn, f, t) => list.reduce((a, x) => a + sumR(fn(x), f, t), 0);
+  const cur = tot(chSeries, state.f, state.t);
+  const prev = pp ? tot(chSeries, pp[0], pp[1]) : null;
+  const yoy = yp ? tot(chSeries, yp[0], yp[1]) : null;
+
+  if (h) {
+    $("h-name").textContent = h.n;
+    $("h-addr").textContent = `${h.st}, ${h.cp} ${h.t}${h.geo === "commune" ? " · localisé au centre de la commune" : ""}`;
+    $("h-lp").href = h.url; $("h-lp").hidden = !h.url;
+    $("h-ids").innerHTML = [
+      ["Ville de référence", `${h.c}${h.ic != null ? ` · ID ${h.ic}` : ""}`],
+      ["Hotel ID · Vertical Booking", h.vb], ["Hotel ID · PIM", h.pim ?? "—"], ["Hotel ID · PMS", h.pms ?? "—"],
+    ].map(([k, v]) => `<div><dt>${k}</dt><dd title="${esc(v)}">${esc(v)}</dd></div>`).join("");
+  } else {
+    $("h-name").textContent = scopeName;
+    $("h-addr").textContent = `${scope.length} hôtels — sélectionnez un hôtel sur la carte ou dans la liste pour afficher sa fiche`;
+    $("h-lp").hidden = true;
+    const withObj = scope.filter((x) => x.obj).length;
+    const villes = new Set(scope.map((x) => x.c)).size;
+    $("h-ids").innerHTML = [["Hôtels", scope.length], ["Villes de référence", villes], ["Avec objectif", withObj], ["Départements", new Set(scope.map((x) => x.d)).size]]
+      .map(([k, v]) => `<div><dt>${k}</dt><dd>${fmt(v)}</dd></div>`).join("");
+  }
+
+  // Objectif (dernier mois, tous channels)
+  const oList = list.filter((x) => x.obj);
+  const oRev = oList.reduce((a, x) => a + x.rev, 0), oObj = oList.reduce((a, x) => a + x.obj, 0);
+  const oIdx = oObj ? (oRev / (oObj * COVER)) * 100 : null;
+  const oSt = oIdx == null ? "nd" : oIdx >= 105 ? "above" : oIdx >= 95 ? "line" : "below";
+  const fill = oIdx == null ? 0 : Math.min(100, (oIdx / 150) * 100);
+
+  // Top channel de la période (familles, ou channels si filtre famille/channel)
+  const series = areaSeries(list).map((s) => ({ ...s, v: sumR(s.data, state.f, state.t) })).sort((a, b) => b.v - a.v);
+  const sTot = series.reduce((a, s) => a + s.v, 0);
+  const top = series[0];
+
+  $("kpis").innerHTML = `
+    <div class="kpi"><span class="eyebrow">Revenu · ${esc(chLabel())}</span><span class="val">${eur(cur)}</span>
+      <span class="meta">${pp ? `vs préc. ${pill(ratio(cur, prev))}` : ""} ${yp ? `vs N-1 ${pill(ratio(cur, yoy))}` : ""}</span></div>
+    <div class="kpi"><span class="eyebrow">Indice objectif · ${esc(MONTHS[LAST].short)}</span>
+      <span class="val">${oIdx == null ? "—" : fmt(oIdx)} <small>/ 100</small></span>
+      <div class="gauge" title="Repère = 100 (objectif digital atteint)"><i style="width:${fill}%;background:var(${ST[oSt].color})"></i><b></b></div>
+      <span class="meta">${status(oSt)}</span></div>
+    <div class="kpi"><span class="eyebrow">Revenu ${esc(MONTHS[LAST].short)} / objectif</span>
+      <span class="val">${eur(oList.length ? oRev : (h ? h.rev : null))}</span>
+      <span class="meta">${oObj ? `obj. digital ${eur(oObj * COVER)} · Obj Room Rev ${eur(oObj)} · couverture ${pct(oRev / oObj)}` : "Objectif non renseigné"}</span></div>
+    <div class="kpi"><span class="eyebrow">Premier channel</span>
+      <span class="val" style="font-size:18px">${top && top.v ? esc(top.label) : "—"}</span>
+      <span class="meta">${top && sTot ? `${pct(top.v / sTot)} du revenu · ${eur(top.v)}` : ""}</span></div>`;
+  $("evo-title").textContent = `Revenu mensuel par channel${state.ch ? " · " + chLabel() : ""}`;
+  drawArea(list);
+}
+
+function idxText(v) { return v == null ? "—" : fmt(v); }
+function renderObjective(scope) {
+  const L = MONTHS[LAST].long;
+  $("obj-note").innerHTML = `<b>Obj Room Rev Mois</b> est l'objectif de revenu chambres de l'hôtel, tous canaux confondus. ` +
+    `Le revenu digital suivi ici en couvre en moyenne <b>${pct(COVER)}</b> sur le réseau en ${L}. ` +
+    `On en déduit pour chaque hôtel un <b>objectif digital</b> = Obj Room Rev × ${pct(COVER)}, puis un <b>indice</b> = revenu digital ÷ objectif digital × 100 ` +
+    `(100 = dans la moyenne du réseau ; ≥ 105 au-dessus, < 95 en dessous).`;
+  const o = scope.filter((h) => h.obj);
+  const rev = o.reduce((a, h) => a + h.rev, 0), obj = o.reduce((a, h) => a + h.obj, 0);
+  const idx = obj ? (rev / (obj * COVER)) * 100 : null;
+  const cnt = (s) => scope.filter((h) => h.stat === s).length;
+  $("obj-tiles").innerHTML = `
+    <div class="tile hero"><span class="eyebrow">Indice ${state.dep ? "du département" : "réseau"} · ${esc(L)}</span>
+      <span class="tval">${idxText(idx)}</span>
+      <span class="tmeta">Revenu digital ${eur(rev)} · objectif digital ${eur(obj * COVER)} · écart ${eur(rev - obj * COVER)}</span></div>` +
+    ["above", "line", "below", "nd"].map((s) => `<div class="tile"><span class="eyebrow"><i class="dot" style="width:9px;height:9px;border-radius:50%;display:inline-block;background:var(${ST[s].color})"></i>${ST[s].label}</span>
+      <span class="tval">${cnt(s)}</span><span class="tmeta">${scope.length ? pct(cnt(s) / scope.length, 0) : "—"} des hôtels</span></div>`).join("");
+  const ranked = o.slice().sort((a, b) => b.idx - a.idx);
+  const li = (h) => `<li><button type="button" data-i="${h.i}"><span>${esc(h.n.replace(/^B&B (HOTEL|HOME)\s*/, ""))}</span><span>${fmt(h.idx)}</span></button></li>`;
+  $("l-top").innerHTML = ranked.slice(0, 5).map(li).join("");
+  $("l-low").innerHTML = ranked.slice(-5).reverse().map(li).join("");
+  renderTable(scope);
+}
+document.querySelector(".lists").addEventListener("click", (e) => { const b = e.target.closest("button"); if (b) setHotel(+b.dataset.i); });
+
+function renderTable(scope) {
+  const k = state.sortK, dir = state.sortDir;
+  const rankMap = new Map(scope.filter((h) => h.obj).sort((a, b) => b.idx - a.idx).map((h, i) => [h.i, i + 1]));
+  const val = (h) => k === "rk" ? (rankMap.get(h.i) ?? 1e9) : k === "n" || k === "c" ? h[k] : (h[k] ?? -Infinity);
+  const q = state.q.toLowerCase();
+  const rows = scope.filter((h) => !q || `${h.n} ${h.c} ${h.t} ${h.cp} ${h.vb}`.toLowerCase().includes(q))
+    .sort((a, b) => { const x = val(a), y = val(b); return (typeof x === "string" ? x.localeCompare(y, "fr") : x - y) * dir; });
+  $("tbl").querySelector("tbody").innerHTML = rows.map((h) => `<tr data-i="${h.i}" class="${h.i === state.hotel ? "cur" : ""}">
+    <td class="rk l">${rankMap.get(h.i) ?? "—"}</td><td class="nm l" title="${esc(h.n)} — ${esc(h.c)}">${esc(h.n.replace(/^B&B (HOTEL|HOME)\s*/, ""))}</td>
+    <td>${eur(h.obj)}</td><td>${eur(h.rev)}</td>
+    <td>${h.cov == null ? "—" : pct(h.cov)}</td>
+    <td>${eur(h.tgt)}</td><td style="color:var(${h.gap == null ? "--muted" : h.gap >= 0 ? "--up" : "--down"})">${h.gap == null ? "—" : (h.gap > 0 ? "+" : "") + eur(h.gap)}</td>
+    <td><span class="status"><i style="background:var(${ST[h.stat].color})"></i>${idxText(h.idx)}</span></td><td>${pill(h.yoy)}</td></tr>`).join("");
+  $("t-count").textContent = `${rows.length} hôtel${rows.length > 1 ? "s" : ""}`;
+  $("tbl").querySelectorAll("th").forEach((th) => th.setAttribute("aria-sort", th.dataset.k === k ? (dir < 0 ? "descending" : "ascending") : "none"));
+  // Fait défiler le tableau (pas la page) jusqu'à l'hôtel sélectionné
+  const cur = $("tbl").querySelector("tr.cur"), box = $("tbl").parentElement;
+  if (cur) box.scrollTop = cur.offsetTop - box.clientHeight / 2;
+}
+$("tbl").querySelector("thead").addEventListener("click", (e) => {
+  const th = e.target.closest("th"); if (!th) return;
+  const k = th.dataset.k;
+  state.sortDir = state.sortK === k ? -state.sortDir : (k === "n" || k === "c" || k === "rk" ? 1 : -1);
+  state.sortK = k; renderTable(scopeHotels());
+});
+$("tbl").querySelector("tbody").addEventListener("click", (e) => { const tr = e.target.closest("tr"); if (tr) setHotel(+tr.dataset.i); });
+$("t-search").addEventListener("input", (e) => { state.q = e.target.value; renderTable(scopeHotels()); });
+
+function renderChannels(scope) {
+  const h = state.hotel != null ? H[state.hotel] : null;
+  const list = h ? [h] : scope;
+  const pp = prevPeriod(), yp = yoyPeriod();
+  const agg = (fn, f, t) => list.reduce((a, x) => a + sumR(fn(x), f, t), 0);
+  const total = agg((x) => x.tot, state.f, state.t);
+  $("scope-3").textContent = `${h ? h.n : (state.dep ? depLabel(state.dep) : "France entière")} · ${periodLabel()}`;
+
+  $("ch-cards").innerHTML = GR.map((g) => {
+    const fn = (x) => x.grp[g.i];
+    const v = agg(fn, state.f, state.t);
+    const ev = yp ? ratio(v, agg(fn, yp[0], yp[1])) : pp ? ratio(v, agg(fn, pp[0], pp[1])) : null;
+    return `<button type="button" class="ch-card" data-v="g:${g.i}" aria-pressed="${state.ch === "g:" + g.i}">
+      <span class="eyebrow"><i style="background:var(${g.color})"></i>${esc(g.n)}</span>
+      <span class="cval">${eur(v)}</span>
+      <span class="meta"><span>${total ? pct(v / total) : "—"} du total</span>${yp ? `<span>N-1 ${pill(ev)}</span>` : pp ? `<span>préc. ${pill(ev)}</span>` : ""}</span></button>`;
+  }).join("");
+
+  const rows = CH.map((c, i) => {
+    const fn = (x) => x.chs[i] || zeros();
+    const v = agg(fn, state.f, state.t);
+    return { c, i, v, pv: pp ? ratio(v, agg(fn, pp[0], pp[1])) : null, yv: yp ? ratio(v, agg(fn, yp[0], yp[1])) : null };
+  }).filter((r) => r.v || (state.ch === "c:" + r.i)).sort((a, b) => b.v - a.v);
+  $("tbl-ch").querySelector("tbody").innerHTML = rows.map((r) => `<tr data-v="c:${r.i}" class="${state.ch === "c:" + r.i || state.ch === "g:" + r.c.gi ? "cur" : ""}">
+    <td class="l nm">${esc(r.c.n)}</td><td class="l"><span class="status" style="font-weight:500"><i style="background:var(${GR[r.c.gi].color});border-radius:3px"></i>${esc(GR[r.c.gi].n)}</span></td>
+    <td>${eur(r.v)}</td><td>${total ? pct(r.v / total) : "—"}</td><td>${pill(r.pv)}</td><td>${pill(r.yv)}</td></tr>`).join("");
+
+  // Part mensuelle du channel sélectionné
+  const sel = state.ch ? chSeries : null;
+  const muted = css("--muted");
+  const totM = zeros(), selM = zeros();
+  list.forEach((x) => { x.tot.forEach((v, m) => { totM[m] += v; }); if (sel) sel(x).forEach((v, m) => { selM[m] += v; }); });
+  const selColor = !state.ch ? css("--fg") : css(GR[state.ch.startsWith("g:") ? +state.ch.slice(2) : CH[+state.ch.slice(2)].gi].color);
+  $("share-title").textContent = state.ch ? `Part de « ${chLabel()} » dans le revenu digital` : "Revenu digital total — choisissez un channel pour voir sa part";
+  chShare?.destroy();
+  chShare = new Chart($("c-share"), {
+    type: "line",
+    data: { labels: MONTHS.map((m) => m.short), datasets: [{
+      label: state.ch ? chLabel() : "Revenu total",
+      data: state.ch ? selM.map((v, m) => totM[m] ? (v / totM[m]) * 100 : 0) : totM,
+      borderColor: selColor, backgroundColor: selColor, borderWidth: 2, pointRadius: 3, pointHoverRadius: 5, tension: 0.25,
+    }] },
+    options: baseOpts({
+      plugins: { legend: { display: false }, tooltip: { ...baseOpts().plugins.tooltip, callbacks: {
+        label: (c) => state.ch ? ` ${pct(c.parsed.y / 100)} · ${eur(selM[c.dataIndex])}` : ` ${eur(c.parsed.y)}` } } },
+      scales: { x: baseOpts().scales.x, y: { ...baseOpts().scales.y, ticks: { color: muted, callback: (v) => state.ch ? v + " %" : eur(v) } } },
+    }),
+  });
+
+  // Top 10 hôtels du scope pour le channel sélectionné
+  const ranked = scope.map((x) => ({ x, v: sumR(chSeries(x), state.f, state.t) })).filter((r) => r.v > 0).sort((a, b) => b.v - a.v).slice(0, 10);
+  $("top10-title").textContent = `Top 10 hôtels · ${chLabel()} · ${periodLabel()}`;
+  chTop?.destroy();
+  chTop = new Chart($("c-top10"), {
+    type: "bar",
+    data: { labels: ranked.map((r) => r.x.n.replace(/^B&B (HOTEL|HOME)\s*/, "").slice(0, 34)), datasets: [{
+      data: ranked.map((r) => r.v),
+      backgroundColor: ranked.map((r) => r.x.i === state.hotel ? css("--lime") : selColor),
+      borderRadius: 4, borderSkipped: "start", barPercentage: 0.7, categoryPercentage: 0.9,
+    }] },
+    options: baseOpts({
+      indexAxis: "y", interaction: { mode: "nearest", axis: "y", intersect: false },
+      onClick: (e, els) => { if (els.length) setHotel(ranked[els[0].index].x.i); },
+      plugins: { legend: { display: false }, tooltip: { ...baseOpts().plugins.tooltip, callbacks: { title: (c) => ranked[c[0].dataIndex].x.n, label: (c) => ` ${eur(c.parsed.x)}` } } },
+      scales: {
+        x: { grid: { color: css("--line") }, ticks: { color: muted, callback: (v) => eur(v) }, border: { display: false }, beginAtZero: true },
+        y: { grid: { display: false }, ticks: { color: css("--fg"), font: { size: 11 } }, border: { color: css("--line") } },
+      },
+    }),
+  });
+}
+$("ch-cards").addEventListener("click", (e) => { const b = e.target.closest("button"); if (b) setCh(state.ch === b.dataset.v ? "" : b.dataset.v); });
+$("tbl-ch").querySelector("tbody").addEventListener("click", (e) => { const tr = e.target.closest("tr"); if (tr) setCh(state.ch === tr.dataset.v ? "" : tr.dataset.v); });
+
+// ---------- Thème ----------
+function setTheme(t, redraw = true) {
+  if (t === "auto") document.documentElement.removeAttribute("data-theme");
+  else document.documentElement.setAttribute("data-theme", t);
+  document.querySelectorAll("#theme-sw button").forEach((b) => b.setAttribute("aria-pressed", b.dataset.t === t));
+  try { localStorage.setItem("bb-theme", t); } catch (e) { /* stockage indisponible */ }
+  if (redraw) render();
+}
+$("theme-sw").addEventListener("click", (e) => { const b = e.target.closest("button"); if (b) setTheme(b.dataset.t); });
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => render());
+let savedTheme = "auto";
+try { savedTheme = localStorage.getItem("bb-theme") || "auto"; } catch (e) { /* stockage indisponible */ }
+setTheme(savedTheme, false);
+
+fillHotelList();
+render();
+</script>
+</body>
+</html>

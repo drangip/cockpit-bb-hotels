@@ -1,0 +1,5 @@
+# Export Excel brut non versionné
+perf/*.xlsx
+~$*
+__pycache__/
+.claude/
