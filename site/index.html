@@ -96,6 +96,7 @@ header.top { display: grid; grid-template-columns: auto 1fr auto; align-items: c
 }
 .field input:focus, .field select:focus { border-color: var(--accent); outline: none; }
 .f-dep { flex: 0 1 240px; }
+.f-city { flex: 0 1 220px; }
 .f-hotel { flex: 0 1 360px; }
 .f-ch { flex: 0 1 260px; }
 .f-period { flex: 0 1 auto; margin-right: auto; gap: 8px; }
@@ -280,7 +281,7 @@ footer { color: var(--muted); font-size: 12px; text-align: center; }
   .logo.bb img { height: 52px; } .logo.wpp img { height: 22px; }
   .ids { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .kpis, .tiles, .lists { grid-template-columns: 1fr; }
-  .f-dep, .f-hotel, .f-ch { flex-basis: 100%; }
+  .f-dep, .f-city, .f-hotel, .f-ch { flex-basis: 100%; }
 }
 </style>
 </head>
@@ -300,6 +301,11 @@ footer { color: var(--muted); font-size: 12px; text-align: center; }
       <label for="in-dep">Department</label>
       <input id="in-dep" list="dl-dep" placeholder="All of France — name or no.">
       <datalist id="dl-dep"></datalist>
+    </div>
+    <div class="field f-city">
+      <label for="in-city">City</label>
+      <input id="in-city" list="dl-city" placeholder="All cities">
+      <datalist id="dl-city"></datalist>
     </div>
     <div class="field f-hotel">
       <label for="in-hotel">Hotel</label>
@@ -529,7 +535,7 @@ const ST = {
 const status = (s) => `<span class="status"><i style="background:var(${ST[s].color})"></i>${ST[s].label}</span>`;
 
 // ---------- État ----------
-const state = { dep: null, hotel: null, ch: "", f: LAST, t: LAST, preset: "1", evoMode: "eur", sortK: "idx", sortDir: -1, q: "" };
+const state = { dep: null, city: null, hotel: null, ch: "", f: LAST, t: LAST, preset: "1", evoMode: "eur", sortK: "idx", sortDir: -1, q: "" };
 
 // Revenu d'un hôtel pour le channel filtré, mois m
 function chSeries(h) {
@@ -544,7 +550,13 @@ function prevPeriod() {
   return pf >= 0 ? [pf, state.f - 1] : null;
 }
 function yoyPeriod() { return state.f - 12 >= 0 ? [state.f - 12, state.t - 12] : null; }
-function scopeHotels() { return state.dep ? H.filter((h) => h.d === state.dep) : H; }
+const periodMonths = () => MONTHS.slice(state.f, state.t + 1);
+const inScope = (h) => (!state.dep || h.d === state.dep) && (!state.city || h.c === state.city);
+function scopeHotels() { return state.dep || state.city ? H.filter(inScope) : H; }
+function scopeTitle() {
+  if (state.city) return state.dep ? `${state.city} · ${depLabel(state.dep)}` : state.city;
+  return state.dep ? depLabel(state.dep) : "All of France";
+}
 function chLabel() {
   if (!state.ch) return "All channels";
   const [type, key] = state.ch.split(":");
@@ -570,6 +582,19 @@ function parseDep(v) {
   if (/^\d$/.test(v) && usedDeps.includes("0" + v)) return "0" + v;
   return usedDeps.find((c) => (DATA.deps[c] || "").toLowerCase() === v) || usedDeps.find((c) => (DATA.deps[c] || "").toLowerCase().startsWith(v)) || undefined;
 }
+// Villes de référence (City Name) du département sélectionné
+const cityCount = (c) => H.filter((h) => h.c === c && (!state.dep || h.d === state.dep)).length;
+function fillCityList() {
+  const cities = [...new Set(H.filter((h) => !state.dep || h.d === state.dep).map((h) => h.c))].sort((a, b) => a.localeCompare(b, "fr"));
+  $("dl-city").innerHTML = cities.map((c) => `<option value="${esc(c)}">${cityCount(c)} hotel${cityCount(c) > 1 ? "s" : ""}</option>`).join("");
+}
+function parseCity(v) {
+  v = v.trim().toLowerCase();
+  if (!v) return null;
+  const pool = [...new Set(H.filter((h) => !state.dep || h.d === state.dep).map((h) => h.c))];
+  return pool.find((c) => c.toLowerCase() === v) || (pool.filter((c) => c.toLowerCase().startsWith(v)).length === 1 ? pool.find((c) => c.toLowerCase().startsWith(v)) : undefined);
+}
+$("in-city").addEventListener("change", (e) => { const c = parseCity(e.target.value); if (c !== undefined) setCity(c); });
 function parseHotel(v) {
   v = v.trim();
   if (!v) return null;
@@ -606,19 +631,30 @@ $("sel-from").addEventListener("change", (e) => setPeriod(+e.target.value, state
 $("sel-to").addEventListener("change", (e) => setPeriod(state.f, +e.target.value));
 
 $("btn-reset").onclick = () => {
-  Object.assign(state, { dep: null, hotel: null, ch: "", f: LAST, t: LAST, preset: "1", q: "" });
-  $("in-dep").value = ""; $("in-hotel").value = ""; $("sel-ch").value = ""; $("t-search").value = "";
+  Object.assign(state, { dep: null, city: null, hotel: null, ch: "", f: LAST, t: LAST, preset: "1", q: "" });
+  $("in-dep").value = ""; $("in-city").value = ""; $("in-hotel").value = ""; fillCityList(); $("sel-ch").value = ""; $("t-search").value = "";
   fillHotelList(); render(); zoomTo(null);
 };
 function setDep(code) {
   state.dep = code; $("in-dep").value = code ? depLabel(code) : "";
-  if (state.hotel != null && code && H[state.hotel].d !== code) { state.hotel = null; $("in-hotel").value = ""; }
-  fillHotelList(); render(); zoomTo(code);
+  if (state.city && code && !H.some((h) => h.c === state.city && h.d === code)) { state.city = null; $("in-city").value = ""; }
+  if (state.hotel != null && !inScope(H[state.hotel])) { state.hotel = null; $("in-hotel").value = ""; }
+  fillCityList(); fillHotelList(); render();
+  if (state.city) zoomToHotels(scopeHotels()); else zoomTo(code);
+}
+function setCity(c) {
+  state.city = c; $("in-city").value = c || "";
+  if (state.hotel != null && !inScope(H[state.hotel])) { state.hotel = null; $("in-hotel").value = ""; }
+  fillHotelList(); render();
+  if (c) zoomToHotels(scopeHotels()); else zoomTo(state.dep);
 }
 function setHotel(i) {
   state.hotel = i;
   $("in-hotel").value = i == null ? "" : hotelLabel(H[i]);
-  if (i != null && state.dep && H[i].d !== state.dep) { state.dep = null; $("in-dep").value = ""; fillHotelList(); }
+  if (i != null && !inScope(H[i])) {
+    state.dep = null; state.city = null; $("in-dep").value = ""; $("in-city").value = "";
+    fillCityList(); fillHotelList();
+  }
   render();
   if (i != null && H[i].lat != null && H[i].metro) focusHotel(H[i]);
 }
@@ -675,7 +711,18 @@ function focusHotel(h) {
 }
 $("z-in").onclick = () => zoom.scaleBy(svg.transition().duration(300), 1.6);
 $("z-out").onclick = () => zoom.scaleBy(svg.transition().duration(300), 1 / 1.6);
-$("z-fr").onclick = () => { if (state.dep) setDep(null); else zoomTo(null); };
+$("z-fr").onclick = () => {
+  if (state.city) { state.city = null; $("in-city").value = ""; }
+  if (state.dep) setDep(null); else { fillHotelList(); render(); zoomTo(null); }
+};
+// Cadre la carte sur un ensemble d'hôtels (ville de référence)
+function zoomToHotels(list) {
+  const pts = list.filter((h) => h.x != null);
+  if (!pts.length) return;
+  const [x0, x1] = d3.extent(pts, (h) => h.x), [y0, y1] = d3.extent(pts, (h) => h.y);
+  const k = Math.min(16, 0.6 / Math.max((x1 - x0 + 20) / VW, (y1 - y0 + 20) / VH));
+  zoom.transform(svg.transition().duration(500), d3.zoomIdentity.translate(VW / 2, VH / 2).scale(k).translate(-(x0 + x1) / 2, -(y0 + y1) / 2));
+}
 
 const tip = $("tip");
 function showTip(e, html) {
@@ -715,7 +762,7 @@ function renderMap() {
   rScale = (h) => rs(rev.get(h.i) || 0);
   dots.attr("fill", (h) => css(ST[h.stat].color))
     .classed("nodata", (h) => h.stat === "nd")
-    .classed("out", (h) => state.dep && h.d !== state.dep);
+    .classed("out", (h) => !inScope(h));
   gFocus.selectAll("*").remove();
   const fh = state.hotel != null ? H[state.hotel] : null;
   if (fh && fh.x != null) {
@@ -766,27 +813,23 @@ function areaSeries(list) {
   return [{ label: c.n, color: css(GR[c.gi].color), data: agg((h) => h.chs[+key] || zeros()) }];
 }
 function drawArea(list) {
-  let series = areaSeries(list).filter((s) => s.data.some((v) => v));
-  const totals = zeros(); series.forEach((s) => s.data.forEach((v, m) => { totals[m] += v; }));
+  // Seuls les mois de la période sélectionnée sont tracés
+  const series = areaSeries(list).map((s) => ({ ...s, data: s.data.slice(state.f, state.t + 1) })).filter((s) => s.data.some((v) => v));
+  const totals = new Array(state.t - state.f + 1).fill(0);
+  series.forEach((s) => s.data.forEach((v, m) => { totals[m] += v; }));
   const asPct = state.evoMode === "pct";
+  const single = state.f === state.t;  // un seul mois : barre empilée (une aire d'un point ne se voit pas)
   const surf = css("--surface");
-  const labels = MONTHS.map((m) => m.short);
+  const labels = periodMonths().map((m) => m.short);
   const datasets = series.map((s) => ({
     label: s.label,
     data: s.data.map((v, m) => asPct ? (totals[m] ? (v / totals[m]) * 100 : 0) : v),
     borderColor: surf, borderWidth: 2, backgroundColor: s.color, fill: true, pointRadius: 0, pointHoverRadius: 4,
-    pointBackgroundColor: s.color, tension: 0.25,
+    pointBackgroundColor: s.color, tension: 0.25, maxBarThickness: 120,
   }));
-  // Période sélectionnée surlignée
-  const band = { id: "band", beforeDraw(c) {
-    const { ctx, chartArea: a, scales: { x } } = c;
-    if (state.f === 0 && state.t === LAST) return;
-    const x0 = x.getPixelForValue(state.f) - (state.f === state.t ? 8 : 0), x1 = x.getPixelForValue(state.t) + (state.f === state.t ? 8 : 0);
-    ctx.save(); ctx.fillStyle = css("--lime"); ctx.globalAlpha = .18; ctx.fillRect(x0, a.top, Math.max(2, x1 - x0), a.bottom - a.top); ctx.restore();
-  } };
   chArea?.destroy();
   chArea = new Chart($("c-area"), {
-    type: "line", data: { labels, datasets }, plugins: [band],
+    type: single ? "bar" : "line", data: { labels, datasets },
     options: baseOpts({
       plugins: {
         legend: { display: false },
@@ -797,8 +840,8 @@ function drawArea(list) {
           } },
       },
       scales: {
-        x: baseOpts().scales.x,
-        y: { ...baseOpts().scales.y, stacked: true, max: asPct ? 100 : undefined, ticks: { color: css("--muted"), callback: (v) => asPct ? v + " %" : eur(v) } },
+        x: { ...baseOpts().scales.x, stacked: true },
+        y: { ...baseOpts().scales.y, stacked: true, max: asPct ? 100 : undefined, ticks: { color: css("--muted"), callback: (v) => asPct ? v + "%" : eur(v) } },
       },
     }),
   });
@@ -819,7 +862,7 @@ function render() {
   const pp = prevPeriod(), yp = yoyPeriod();
   $("period-note").textContent = `${periodLabel()} · comparisons: ${pp ? "previous period" : ""}${pp && yp ? " and " : ""}${yp ? "last year" : ""}${!pp && !yp ? "none (not enough history)" : ""}`;
   const scope = scopeHotels();
-  const scopeName = state.dep ? depLabel(state.dep) : "All of France";
+  const scopeName = scopeTitle();
   const sl = `${scopeName} · ${chLabel()} · ${periodLabel()}`;
   $("scope-1").textContent = sl; $("scope-3").textContent = `${scopeName} · ${periodLabel()}`;
   $("scope-2").textContent = `${scopeName} · ${MONTHS[LAST].long} · all channels`;
@@ -899,7 +942,7 @@ function renderObjective(scope) {
   const idx = obj ? (rev / (obj * COVER)) * 100 : null;
   const cnt = (s) => scope.filter((h) => h.stat === s).length;
   $("obj-tiles").innerHTML = `
-    <div class="tile hero"><span class="eyebrow">${state.dep ? "Department" : "Network"} index · ${esc(L)}</span>
+    <div class="tile hero"><span class="eyebrow">${state.city ? "City" : state.dep ? "Department" : "Network"} index · ${esc(L)}</span>
       <span class="tval">${idxText(idx)}</span>
       <span class="tmeta">Digital revenue ${eur(rev)} · digital target ${eur(obj * COVER)} · gap ${eur(rev - obj * COVER)}</span></div>` +
     ["above", "line", "below", "nd"].map((s) => `<div class="tile"><span class="eyebrow"><i class="dot" style="width:9px;height:9px;border-radius:50%;display:inline-block;background:var(${ST[s].color})"></i>${ST[s].label}</span>
@@ -946,7 +989,7 @@ function renderChannels(scope) {
   const pp = prevPeriod(), yp = yoyPeriod();
   const agg = (fn, f, t) => list.reduce((a, x) => a + sumR(fn(x), f, t), 0);
   const total = agg((x) => x.tot, state.f, state.t);
-  $("scope-3").textContent = `${h ? h.n : (state.dep ? depLabel(state.dep) : "All of France")} · ${periodLabel()}`;
+  $("scope-3").textContent = `${h ? h.n : scopeTitle()} · ${periodLabel()}`;
 
   $("ch-cards").innerHTML = GR.map((g) => {
     const fn = (x) => x.grp[g.i];
@@ -970,14 +1013,16 @@ function renderChannels(scope) {
   // Part mensuelle du channel sélectionné
   const sel = state.ch ? chSeries : null;
   const muted = css("--muted");
-  const totM = zeros(), selM = zeros();
+  let totM = zeros(), selM = zeros();
   list.forEach((x) => { x.tot.forEach((v, m) => { totM[m] += v; }); if (sel) sel(x).forEach((v, m) => { selM[m] += v; }); });
+  // Seuls les mois de la période sélectionnée sont tracés
+  totM = totM.slice(state.f, state.t + 1); selM = selM.slice(state.f, state.t + 1);
   const selColor = !state.ch ? css("--fg") : css(GR[state.ch.startsWith("g:") ? +state.ch.slice(2) : CH[+state.ch.slice(2)].gi].color);
   $("share-title").textContent = state.ch ? `“${chLabel()}” share of digital revenue` : "Total digital revenue — pick a channel to see its share";
   chShare?.destroy();
   chShare = new Chart($("c-share"), {
     type: "line",
-    data: { labels: MONTHS.map((m) => m.short), datasets: [{
+    data: { labels: periodMonths().map((m) => m.short), datasets: [{
       label: state.ch ? chLabel() : "Total revenue",
       data: state.ch ? selM.map((v, m) => totM[m] ? (v / totM[m]) * 100 : 0) : totM,
       borderColor: selColor, backgroundColor: selColor, borderWidth: 2, pointRadius: 3, pointHoverRadius: 5, tension: 0.25,
@@ -985,7 +1030,7 @@ function renderChannels(scope) {
     options: baseOpts({
       plugins: { legend: { display: false }, tooltip: { ...baseOpts().plugins.tooltip, callbacks: {
         label: (c) => state.ch ? ` ${pct(c.parsed.y / 100)} · ${eur(selM[c.dataIndex])}` : ` ${eur(c.parsed.y)}` } } },
-      scales: { x: baseOpts().scales.x, y: { ...baseOpts().scales.y, ticks: { color: muted, callback: (v) => state.ch ? v + " %" : eur(v) } } },
+      scales: { x: baseOpts().scales.x, y: { ...baseOpts().scales.y, ticks: { color: muted, callback: (v) => state.ch ? v + "%" : eur(v) } } },
     }),
   });
 
@@ -1028,6 +1073,7 @@ let savedTheme = "auto";
 try { savedTheme = localStorage.getItem("bb-theme") || "auto"; } catch (e) { /* stockage indisponible */ }
 setTheme(savedTheme, false);
 
+fillCityList();
 fillHotelList();
 render();
 </script>
