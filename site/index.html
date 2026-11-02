@@ -535,7 +535,8 @@ const ST = {
 const status = (s) => `<span class="status"><i style="background:var(${ST[s].color})"></i>${ST[s].label}</span>`;
 
 // ---------- État ----------
-const state = { dep: null, city: null, hotel: null, ch: "", f: LAST, t: LAST, preset: "1", evoMode: "eur", sortK: "idx", sortDir: -1, q: "" };
+// Période par défaut : 6 derniers mois
+const state = { dep: null, city: null, hotel: null, ch: "", f: Math.max(0, LAST - 5), t: LAST, preset: "6", evoMode: "eur", sortK: "idx", sortDir: -1, q: "" };
 
 // Revenu d'un hôtel pour le channel filtré, mois m
 function chSeries(h) {
@@ -631,7 +632,7 @@ $("sel-from").addEventListener("change", (e) => setPeriod(+e.target.value, state
 $("sel-to").addEventListener("change", (e) => setPeriod(state.f, +e.target.value));
 
 $("btn-reset").onclick = () => {
-  Object.assign(state, { dep: null, city: null, hotel: null, ch: "", f: LAST, t: LAST, preset: "1", q: "" });
+  Object.assign(state, { dep: null, city: null, hotel: null, ch: "", f: Math.max(0, LAST - 5), t: LAST, preset: "6", q: "" });
   $("in-dep").value = ""; $("in-city").value = ""; $("in-hotel").value = ""; fillCityList(); $("sel-ch").value = ""; $("t-search").value = "";
   fillHotelList(); render(); zoomTo(null);
 };
