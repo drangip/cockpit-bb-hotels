@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="fr">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -289,21 +289,21 @@ footer { color: var(--muted); font-size: 12px; text-align: center; }
   <header class="top">
     <div class="logo bb"><img src="__LOGO_BB__" alt="B&amp;B HOTELS"></div>
     <div class="title">
-      <h1>Cockpit performance <span>hôtels</span></h1>
-      <p id="subtitle">Revenus digitaux par channel · données mensuelles</p>
+      <h1>Hotel performance <span>cockpit</span></h1>
+      <p id="subtitle">Digital revenue by channel · monthly data</p>
     </div>
     <div class="logo wpp"><img src="__LOGO_WPP__" alt="WPP Media"></div>
   </header>
 
   <form class="filters" id="filters" autocomplete="off" onsubmit="return false">
     <div class="field f-dep">
-      <label for="in-dep">Département</label>
-      <input id="in-dep" list="dl-dep" placeholder="Toute la France — nom ou n°">
+      <label for="in-dep">Department</label>
+      <input id="in-dep" list="dl-dep" placeholder="All of France — name or no.">
       <datalist id="dl-dep"></datalist>
     </div>
     <div class="field f-hotel">
-      <label for="in-hotel">Hôtel</label>
-      <input id="in-hotel" list="dl-hotel" placeholder="Nom, ville, code postal ou ID">
+      <label for="in-hotel">Hotel</label>
+      <input id="in-hotel" list="dl-hotel" placeholder="Name, city, postcode or ID">
       <datalist id="dl-hotel"></datalist>
     </div>
     <div class="field f-ch">
@@ -311,50 +311,50 @@ footer { color: var(--muted); font-size: 12px; text-align: center; }
       <select id="sel-ch"></select>
     </div>
     <div class="field f-period">
-      <label for="sel-from">Période</label>
+      <label for="sel-from">Period</label>
       <div class="period-row" id="presets">
-        <button type="button" class="chip" data-m="1">Dernier mois</button>
-        <button type="button" class="chip" data-m="3">3 mois</button>
-        <button type="button" class="chip" data-m="6">6 mois</button>
-        <button type="button" class="chip" data-m="12">12 mois</button>
-        <button type="button" class="chip" data-m="ytd">Année en cours</button>
+        <button type="button" class="chip" data-m="1">Last month</button>
+        <button type="button" class="chip" data-m="3">3 months</button>
+        <button type="button" class="chip" data-m="6">6 months</button>
+        <button type="button" class="chip" data-m="12">12 months</button>
+        <button type="button" class="chip" data-m="ytd">Year to date</button>
       </div>
       <div class="period-row">
-        <select id="sel-from" aria-label="Mois de début"></select>
+        <select id="sel-from" aria-label="Start month"></select>
         <span class="sep">→</span>
-        <select id="sel-to" aria-label="Mois de fin"></select>
+        <select id="sel-to" aria-label="End month"></select>
       </div>
       <span class="period-note" id="period-note"></span>
     </div>
     <div class="f-actions">
       <div class="f-theme">
-        <span class="eyebrow" id="lbl-theme">Affichage</span>
+        <span class="eyebrow" id="lbl-theme">Display</span>
         <div class="theme-sw" id="theme-sw" role="group" aria-labelledby="lbl-theme">
-          <button type="button" data-t="auto" title="Suit le réglage de l'ordinateur">Auto</button>
-          <button type="button" data-t="light">Clair</button>
-          <button type="button" data-t="dark">Sombre</button>
+          <button type="button" data-t="auto" title="Follows the system setting">Auto</button>
+          <button type="button" data-t="light">Light</button>
+          <button type="button" data-t="dark">Dark</button>
         </div>
       </div>
-      <button type="button" class="btn-reset" id="btn-reset">Réinitialiser</button>
+      <button type="button" class="btn-reset" id="btn-reset">Reset</button>
     </div>
   </form>
 
   <!-- 1. Carte + fiche -->
   <section class="block" aria-labelledby="t-net">
-    <div class="band"><span id="t-net">Réseau &amp; fiche hôtel</span><small id="scope-1"></small></div>
+    <div class="band"><span id="t-net">Network &amp; hotel profile</span><small id="scope-1"></small></div>
     <div class="grid-2">
       <div class="cell">
-        <div class="sub">Carte du réseau</div>
+        <div class="sub">Network map</div>
         <div style="position:relative">
-          <svg id="map" viewBox="0 0 600 570" role="img" aria-label="Carte des hôtels B&amp;B par département"></svg>
+          <svg id="map" viewBox="0 0 600 570" role="img" aria-label="Map of B&amp;B hotels by department"></svg>
           <div class="map-tools">
-            <button type="button" id="z-in" aria-label="Zoomer">+</button>
-            <button type="button" id="z-out" aria-label="Dézoomer">−</button>
-            <button type="button" id="z-fr" aria-label="Revenir à la France entière" title="France entière">⌂</button>
+            <button type="button" id="z-in" aria-label="Zoom in">+</button>
+            <button type="button" id="z-out" aria-label="Zoom out">−</button>
+            <button type="button" id="z-fr" aria-label="Back to all of France" title="All of France">⌂</button>
           </div>
         </div>
         <div class="legend">
-          <span><span class="ramp"></span> Revenu du département</span>
+          <span><span class="ramp"></span> Department revenue</span>
         </div>
         <div class="legend" id="map-legend"></div>
         <div class="dom" id="dom"></div>
@@ -368,19 +368,19 @@ footer { color: var(--muted); font-size: 12px; text-align: center; }
               <p id="h-addr"></p>
             </div>
           </div>
-          <a class="lp" id="h-lp" target="_blank" rel="noopener" hidden>Page hôtel ↗</a>
+          <a class="lp" id="h-lp" target="_blank" rel="noopener" hidden>Hotel page ↗</a>
         </div>
         <dl class="ids" id="h-ids"></dl>
         <div class="kpis" id="kpis"></div>
         <div class="evo">
           <div class="evo-head">
-            <div class="sub" id="evo-title">Revenu mensuel par channel</div>
-            <div class="seg" id="evo-mode" role="group" aria-label="Unité du graphique">
+            <div class="sub" id="evo-title">Monthly revenue by channel</div>
+            <div class="seg" id="evo-mode" role="group" aria-label="Chart unit">
               <button type="button" data-v="eur" aria-pressed="true">€</button>
-              <button type="button" data-v="pct" aria-pressed="false">% du total</button>
+              <button type="button" data-v="pct" aria-pressed="false">% of total</button>
             </div>
           </div>
-          <div class="chart-box"><canvas id="c-area" aria-label="Revenu mensuel empilé par channel"></canvas></div>
+          <div class="chart-box"><canvas id="c-area" aria-label="Monthly revenue stacked by channel"></canvas></div>
           <div class="ch-legend" id="area-legend"></div>
         </div>
       </div>
@@ -389,37 +389,37 @@ footer { color: var(--muted); font-size: 12px; text-align: center; }
 
   <!-- 2. Objectif -->
   <section class="block" aria-labelledby="t-obj">
-    <div class="band"><span id="t-obj">Objectif du mois</span><small id="scope-2"></small></div>
+    <div class="band"><span id="t-obj">Monthly target</span><small id="scope-2"></small></div>
     <div class="grid-2 obj">
       <div class="cell">
-        <div class="sub">Revenu digital vs objectif</div>
+        <div class="sub">Digital revenue vs target</div>
         <p class="note" id="obj-note"></p>
         <div class="tiles" id="obj-tiles"></div>
         <div class="lists">
-          <div><div class="sub">Meilleurs indices</div><ol id="l-top"></ol></div>
-          <div><div class="sub">Plus faibles indices</div><ol id="l-low"></ol></div>
+          <div><div class="sub">Highest indices</div><ol id="l-top"></ol></div>
+          <div><div class="sub">Lowest indices</div><ol id="l-low"></ol></div>
         </div>
       </div>
       <div class="cell">
         <div class="table-tools">
-          <div class="sub" style="margin:0">Détail par hôtel</div>
+          <div class="sub" style="margin:0">Hotel breakdown</div>
           <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
             <span class="count" id="t-count"></span>
-            <input id="t-search" type="search" placeholder="Filtrer le tableau" aria-label="Filtrer le tableau">
+            <input id="t-search" type="search" placeholder="Filter the table" aria-label="Filter the table">
           </div>
         </div>
         <div class="tbl">
           <table id="tbl">
             <thead><tr>
               <th data-k="rk" class="l">#</th>
-              <th data-k="n" class="l">Hôtel</th>
-              <th data-k="obj" title="Obj Room Rev Mois (objectif de revenu chambres, tous canaux)">Obj. Room Rev</th>
-              <th data-k="rev">Revenu digital</th>
-              <th data-k="cov" title="Revenu digital du mois / Obj Room Rev Mois">Couverture</th>
-              <th data-k="tgt" title="Obj Room Rev Mois × couverture moyenne du réseau">Obj. digital</th>
-              <th data-k="gap">Écart</th>
-              <th data-k="idx">Indice</th>
-              <th data-k="yoy">vs N-1</th>
+              <th data-k="n" class="l">Hotel</th>
+              <th data-k="obj" title="Obj Room Rev Mois (room revenue target, all channels)">Room Rev target</th>
+              <th data-k="rev">Digital revenue</th>
+              <th data-k="cov" title="Digital revenue of the month / Obj Room Rev Mois">Coverage</th>
+              <th data-k="tgt" title="Obj Room Rev Mois × network average coverage">Digital target</th>
+              <th data-k="gap">Gap</th>
+              <th data-k="idx">Index</th>
+              <th data-k="yoy">vs LY</th>
             </tr></thead>
             <tbody></tbody>
           </table>
@@ -430,17 +430,17 @@ footer { color: var(--muted); font-size: 12px; text-align: center; }
 
   <!-- 3. Channels -->
   <section class="block" aria-labelledby="t-ch">
-    <div class="band"><span id="t-ch">Volet par channel média</span><small id="scope-3"></small></div>
+    <div class="band"><span id="t-ch">Media channel view</span><small id="scope-3"></small></div>
     <div class="grid-2 chs">
       <div class="cell">
-        <div class="sub">Familles de channels — cliquez pour filtrer le cockpit</div>
+        <div class="sub">Channel families — click to filter the cockpit</div>
         <div class="ch-cards" id="ch-cards"></div>
         <div class="ch-detail">
-          <div class="sub">Détail des channels</div>
+          <div class="sub">Channel breakdown</div>
           <div class="tbl">
             <table id="tbl-ch">
               <thead><tr>
-                <th class="l">Channel</th><th class="l">Famille</th><th>Revenu</th><th>Part</th><th>vs préc.</th><th>vs N-1</th>
+                <th class="l">Channel</th><th class="l">Family</th><th>Revenue</th><th>Share</th><th>vs prev.</th><th>vs LY</th>
               </tr></thead>
               <tbody></tbody>
             </table>
@@ -449,12 +449,12 @@ footer { color: var(--muted); font-size: 12px; text-align: center; }
       </div>
       <div class="cell">
         <div class="evo-head">
-          <div class="sub" id="share-title">Part du channel dans le revenu digital</div>
+          <div class="sub" id="share-title">Channel share of digital revenue</div>
         </div>
-        <div class="chart-box" style="height:230px"><canvas id="c-share" aria-label="Part mensuelle du channel sélectionné"></canvas></div>
+        <div class="chart-box" style="height:230px"><canvas id="c-share" aria-label="Monthly share of the selected channel"></canvas></div>
         <div class="top10" style="margin-top:18px">
-          <div class="sub" id="top10-title">Top 10 hôtels</div>
-          <div class="chart-box"><canvas id="c-top10" aria-label="Dix hôtels au plus fort revenu"></canvas></div>
+          <div class="sub" id="top10-title">Top 10 hotels</div>
+          <div class="chart-box"><canvas id="c-top10" aria-label="Ten highest-revenue hotels"></canvas></div>
         </div>
       </div>
     </div>
@@ -471,10 +471,10 @@ const GEO = __GEO__;
 
 const $ = (id) => document.getElementById(id);
 const css = (v) => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
-const nf = new Intl.NumberFormat("fr-FR");
+const nf = new Intl.NumberFormat("en-GB");
 const fmt = (v) => v == null || !isFinite(v) ? "—" : nf.format(Math.round(v));
-const eur = (v) => v == null || !isFinite(v) ? "—" : Math.abs(v) >= 1e6 ? (v / 1e6).toLocaleString("fr-FR", { maximumFractionDigits: 2 }) + " M€" : Math.abs(v) >= 1e4 ? (v / 1e3).toLocaleString("fr-FR", { maximumFractionDigits: 0 }) + " k€" : nf.format(Math.round(v)) + " €";
-const pct = (v, d = 1) => v == null || !isFinite(v) ? "—" : (v * 100).toLocaleString("fr-FR", { maximumFractionDigits: d, minimumFractionDigits: d }) + " %";
+const eur = (v) => v == null || !isFinite(v) ? "—" : Math.abs(v) >= 1e6 ? (v / 1e6).toLocaleString("en-GB", { maximumFractionDigits: 2 }) + " M€" : Math.abs(v) >= 1e4 ? (v / 1e3).toLocaleString("en-GB", { maximumFractionDigits: 0 }) + " k€" : nf.format(Math.round(v)) + " €";
+const pct = (v, d = 1) => v == null || !isFinite(v) ? "—" : (v * 100).toLocaleString("en-GB", { maximumFractionDigits: d, minimumFractionDigits: d }) + "%";
 const evo = (v) => v == null || !isFinite(v) ? "—" : (v > 0 ? "+" : "") + pct(v);
 const pill = (v) => `<span class="pill ${v == null || !isFinite(v) ? "flat" : v > 0.0005 ? "up" : v < -0.0005 ? "down" : "flat"}">${evo(v)}</span>`;
 const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
@@ -483,11 +483,11 @@ const ratio = (a, b) => b ? a / b - 1 : null;
 // ---------- Données ----------
 const MONTHS = DATA.months.map((m) => {
   const d = new Date(m + "-01T00:00:00");
-  return { m, d, short: d.toLocaleDateString("fr-FR", { month: "short", year: "2-digit" }), long: d.toLocaleDateString("fr-FR", { month: "long", year: "numeric" }) };
+  return { m, d, short: d.toLocaleDateString("en-GB", { month: "short", year: "2-digit" }), long: d.toLocaleDateString("en-GB", { month: "long", year: "numeric" }) };
 });
 const NM = MONTHS.length, LAST = NM - 1;
 const CH = DATA.channels;                       // [{n, g}]
-const GR = DATA.groups.map((g, i) => ({ ...g, i, color: `--c${i + 1}` }));
+const GR = DATA.groups.map((g, i) => ({ ...g, i, color: g.k === "other" ? "--c8" : `--c${i + 1}` }));
 const GIDX = Object.fromEntries(GR.map((g) => [g.k, g.i]));
 CH.forEach((c) => { c.gi = GIDX[c.g]; });
 const H = DATA.hotels;
@@ -521,10 +521,10 @@ H.forEach((h) => {
   h.stat = h.idx == null ? "nd" : h.idx >= 105 ? "above" : h.idx >= 95 ? "line" : "below";
 });
 const ST = {
-  above: { label: "Au-dessus", color: "--st-above" },
-  line: { label: "En ligne", color: "--st-line" },
-  below: { label: "En dessous", color: "--st-below" },
-  nd: { label: "Objectif non renseigné", color: "--muted" },
+  above: { label: "Above", color: "--st-above" },
+  line: { label: "On track", color: "--st-line" },
+  below: { label: "Below", color: "--st-below" },
+  nd: { label: "No target", color: "--muted" },
 };
 const status = (s) => `<span class="status"><i style="background:var(${ST[s].color})"></i>${ST[s].label}</span>`;
 
@@ -546,7 +546,7 @@ function prevPeriod() {
 function yoyPeriod() { return state.f - 12 >= 0 ? [state.f - 12, state.t - 12] : null; }
 function scopeHotels() { return state.dep ? H.filter((h) => h.d === state.dep) : H; }
 function chLabel() {
-  if (!state.ch) return "Tous channels";
+  if (!state.ch) return "All channels";
   const [type, key] = state.ch.split(":");
   return type === "g" ? GR[+key].n : CH[+key].n;
 }
@@ -555,7 +555,7 @@ function periodLabel() {
 }
 
 // ---------- Filtres ----------
-const depLabel = (c) => `${c} — ${DATA.deps[c] || "Outre-mer"}`;
+const depLabel = (c) => `${c} — ${DATA.deps[c] || "Overseas"}`;
 const hotelLabel = (h) => `${h.n} — ${h.cp} ${h.t} (#${h.vb})`;
 const usedDeps = [...new Set(H.map((h) => h.d).filter(Boolean))].sort();
 $("dl-dep").innerHTML = usedDeps.map((c) => `<option value="${esc(depLabel(c))}">`).join("");
@@ -583,9 +583,9 @@ $("in-dep").addEventListener("change", (e) => { const c = parseDep(e.target.valu
 $("in-hotel").addEventListener("change", (e) => { const i = parseHotel(e.target.value); if (i !== undefined) setHotel(i); });
 
 // Channel : familles puis channels détaillés
-$("sel-ch").innerHTML = `<option value="">Tous channels</option>` +
-  `<optgroup label="Familles">${GR.map((g) => `<option value="g:${g.i}">${esc(g.n)}</option>`).join("")}</optgroup>` +
-  `<optgroup label="Channels détaillés">${CH.map((c, i) => `<option value="c:${i}">${esc(c.n)}</option>`).join("")}</optgroup>`;
+$("sel-ch").innerHTML = `<option value="">All channels</option>` +
+  `<optgroup label="Families">${GR.map((g) => `<option value="g:${g.i}">${esc(g.n)}</option>`).join("")}</optgroup>` +
+  `<optgroup label="Detailed channels">${CH.map((c, i) => `<option value="c:${i}">${esc(c.n)}</option>`).join("")}</optgroup>`;
 $("sel-ch").addEventListener("change", (e) => setCh(e.target.value));
 function setCh(v) { state.ch = v; $("sel-ch").value = v; render(); }
 
@@ -690,11 +690,11 @@ function hideTip() { tip.hidden = true; }
 let depRev = {};
 function depTip(code) {
   const n = H.filter((h) => h.d === code).length;
-  return `<b>${esc(depLabel(code))}</b><br>${n} hôtel${n > 1 ? "s" : ""} · ${eur(depRev[code] || 0)}<br><span style="opacity:.8">${esc(chLabel())} · ${esc(periodLabel())}</span>`;
+  return `<b>${esc(depLabel(code))}</b><br>${n} hotel${n > 1 ? "s" : ""} · ${eur(depRev[code] || 0)}<br><span style="opacity:.8">${esc(chLabel())} · ${esc(periodLabel())}</span>`;
 }
 function hotelTip(h) {
   return `<b>${esc(h.n)}</b><br>${esc(h.cp)} ${esc(h.t)}<br>${esc(chLabel())} : ${eur(sumR(chSeries(h), state.f, state.t))}` +
-    `<br>Indice objectif ${MONTHS[LAST].short} : ${h.idx == null ? "—" : fmt(h.idx)} · ${ST[h.stat].label}`;
+    `<br>Target index ${MONTHS[LAST].short} : ${h.idx == null ? "—" : fmt(h.idx)} · ${ST[h.stat].label}`;
 }
 
 function renderMap() {
@@ -723,11 +723,11 @@ function renderMap() {
     gFocus.append("circle").attr("class", "focus-dot").attr("cx", fh.x).attr("cy", fh.y);
   }
   sizeMarks();
-  $("map-legend").innerHTML = `<span>Indice objectif ${esc(MONTHS[LAST].short)} :</span>` +
+  $("map-legend").innerHTML = `<span>Target index ${esc(MONTHS[LAST].short)}:</span>` +
     ["above", "line", "below"].map((s) => `<span><i class="dot" style="background:var(${ST[s].color})"></i>${ST[s].label}</span>`).join("") +
-    `<span><i class="dot hollow"></i>Sans objectif</span><span>· taille = revenu de la période</span>`;
+    `<span><i class="dot hollow"></i>No target</span><span>· size = period revenue</span>`;
   const dom = H.filter((h) => !h.metro);
-  $("dom").innerHTML = dom.length ? `<span>Outre-mer :</span>` + dom.map((h) =>
+  $("dom").innerHTML = dom.length ? `<span>Overseas:</span>` + dom.map((h) =>
     `<button type="button" data-i="${h.i}"><i class="dot" style="width:9px;height:9px;border-radius:50%;background:var(${ST[h.stat].color})"></i>${esc(h.n.replace(/^B&B (HOTEL|HOME)\s*/, ""))}</button>`).join("") : "";
 }
 $("dom").addEventListener("click", (e) => { const b = e.target.closest("button"); if (b) setHotel(+b.dataset.i); });
@@ -792,8 +792,8 @@ function drawArea(list) {
         legend: { display: false },
         tooltip: { ...baseOpts().plugins.tooltip, itemSort: (a, b) => b.datasetIndex - a.datasetIndex,
           callbacks: {
-            label: (c) => ` ${c.dataset.label} : ${asPct ? pct(c.parsed.y / 100) : eur(c.parsed.y)}`,
-            footer: (items) => asPct ? "" : `Total : ${eur(items.reduce((a, i) => a + i.parsed.y, 0))}`,
+            label: (c) => ` ${c.dataset.label}: ${asPct ? pct(c.parsed.y / 100) : eur(c.parsed.y)}`,
+            footer: (items) => asPct ? "" : `Total: ${eur(items.reduce((a, i) => a + i.parsed.y, 0))}`,
           } },
       },
       scales: {
@@ -817,18 +817,18 @@ function render() {
   document.querySelectorAll("#presets .chip").forEach((b) => b.setAttribute("aria-pressed", b.dataset.m === state.preset));
   $("sel-from").value = state.f; $("sel-to").value = state.t;
   const pp = prevPeriod(), yp = yoyPeriod();
-  $("period-note").textContent = `${periodLabel()} · comparaisons : ${pp ? "période précédente" : ""}${pp && yp ? " et " : ""}${yp ? "N-1" : ""}${!pp && !yp ? "aucune (historique insuffisant)" : ""}`;
+  $("period-note").textContent = `${periodLabel()} · comparisons: ${pp ? "previous period" : ""}${pp && yp ? " and " : ""}${yp ? "last year" : ""}${!pp && !yp ? "none (not enough history)" : ""}`;
   const scope = scopeHotels();
-  const scopeName = state.dep ? depLabel(state.dep) : "France entière";
+  const scopeName = state.dep ? depLabel(state.dep) : "All of France";
   const sl = `${scopeName} · ${chLabel()} · ${periodLabel()}`;
   $("scope-1").textContent = sl; $("scope-3").textContent = `${scopeName} · ${periodLabel()}`;
-  $("scope-2").textContent = `${scopeName} · ${MONTHS[LAST].long} · tous channels`;
-  $("t-obj").textContent = `Objectif ${MONTHS[LAST].long}`;
+  $("scope-2").textContent = `${scopeName} · ${MONTHS[LAST].long} · all channels`;
+  $("t-obj").textContent = `${MONTHS[LAST].long} target`;
   renderMap();
   renderFiche(scope, scopeName);
   renderObjective(scope);
   renderChannels(scope);
-  $("foot").textContent = `${H.length} hôtels · ${CH.length} channels · données ${MONTHS[0].long} → ${MONTHS[LAST].long} · couverture réseau de l'objectif ${pct(COVER)} · B&B HOTELS × WPP Media`;
+  $("foot").textContent = `${H.length} hotels · ${CH.length} channels · data ${MONTHS[0].long} → ${MONTHS[LAST].long} · network target coverage ${pct(COVER)} · B&B HOTELS × WPP Media`;
 }
 
 function renderFiche(scope, scopeName) {
@@ -842,19 +842,19 @@ function renderFiche(scope, scopeName) {
 
   if (h) {
     $("h-name").textContent = h.n;
-    $("h-addr").textContent = `${h.st}, ${h.cp} ${h.t}${h.geo === "commune" ? " · localisé au centre de la commune" : ""}`;
+    $("h-addr").textContent = `${h.st}, ${h.cp} ${h.t}${h.geo === "commune" ? " · located at the town centre" : ""}`;
     $("h-lp").href = h.url; $("h-lp").hidden = !h.url;
     $("h-ids").innerHTML = [
-      ["Ville de référence", `${h.c}${h.ic != null ? ` · ID ${h.ic}` : ""}`],
+      ["Reference city", `${h.c}${h.ic != null ? ` · ID ${h.ic}` : ""}`],
       ["Hotel ID · Vertical Booking", h.vb], ["Hotel ID · PIM", h.pim ?? "—"], ["Hotel ID · PMS", h.pms ?? "—"],
     ].map(([k, v]) => `<div><dt>${k}</dt><dd title="${esc(v)}">${esc(v)}</dd></div>`).join("");
   } else {
     $("h-name").textContent = scopeName;
-    $("h-addr").textContent = `${scope.length} hôtels — sélectionnez un hôtel sur la carte ou dans la liste pour afficher sa fiche`;
+    $("h-addr").textContent = `${scope.length} hotels — select a hotel on the map or in the list to show its profile`;
     $("h-lp").hidden = true;
     const withObj = scope.filter((x) => x.obj).length;
     const villes = new Set(scope.map((x) => x.c)).size;
-    $("h-ids").innerHTML = [["Hôtels", scope.length], ["Villes de référence", villes], ["Avec objectif", withObj], ["Départements", new Set(scope.map((x) => x.d)).size]]
+    $("h-ids").innerHTML = [["Hotels", scope.length], ["Reference cities", villes], ["With target", withObj], ["Departments", new Set(scope.map((x) => x.d)).size]]
       .map(([k, v]) => `<div><dt>${k}</dt><dd>${fmt(v)}</dd></div>`).join("");
   }
 
@@ -871,39 +871,39 @@ function renderFiche(scope, scopeName) {
   const top = series[0];
 
   $("kpis").innerHTML = `
-    <div class="kpi"><span class="eyebrow">Revenu · ${esc(chLabel())}</span><span class="val">${eur(cur)}</span>
-      <span class="meta">${pp ? `vs préc. ${pill(ratio(cur, prev))}` : ""} ${yp ? `vs N-1 ${pill(ratio(cur, yoy))}` : ""}</span></div>
-    <div class="kpi"><span class="eyebrow">Indice objectif · ${esc(MONTHS[LAST].short)}</span>
+    <div class="kpi"><span class="eyebrow">Revenue · ${esc(chLabel())}</span><span class="val">${eur(cur)}</span>
+      <span class="meta">${pp ? `vs prev. ${pill(ratio(cur, prev))}` : ""} ${yp ? `vs LY ${pill(ratio(cur, yoy))}` : ""}</span></div>
+    <div class="kpi"><span class="eyebrow">Target index · ${esc(MONTHS[LAST].short)}</span>
       <span class="val">${oIdx == null ? "—" : fmt(oIdx)} <small>/ 100</small></span>
-      <div class="gauge" title="Repère = 100 (objectif digital atteint)"><i style="width:${fill}%;background:var(${ST[oSt].color})"></i><b></b></div>
+      <div class="gauge" title="Marker = 100 (digital target reached)"><i style="width:${fill}%;background:var(${ST[oSt].color})"></i><b></b></div>
       <span class="meta">${status(oSt)}</span></div>
-    <div class="kpi"><span class="eyebrow">Revenu ${esc(MONTHS[LAST].short)} / objectif</span>
+    <div class="kpi"><span class="eyebrow">${esc(MONTHS[LAST].short)} revenue / target</span>
       <span class="val">${eur(oList.length ? oRev : (h ? h.rev : null))}</span>
-      <span class="meta">${oObj ? `obj. digital ${eur(oObj * COVER)} · Obj Room Rev ${eur(oObj)} · couverture ${pct(oRev / oObj)}` : "Objectif non renseigné"}</span></div>
-    <div class="kpi"><span class="eyebrow">Premier channel</span>
+      <span class="meta">${oObj ? `digital target ${eur(oObj * COVER)} · Room Rev target ${eur(oObj)} · coverage ${pct(oRev / oObj)}` : "No target"}</span></div>
+    <div class="kpi"><span class="eyebrow">Top channel</span>
       <span class="val" style="font-size:18px">${top && top.v ? esc(top.label) : "—"}</span>
-      <span class="meta">${top && sTot ? `${pct(top.v / sTot)} du revenu · ${eur(top.v)}` : ""}</span></div>`;
-  $("evo-title").textContent = `Revenu mensuel par channel${state.ch ? " · " + chLabel() : ""}`;
+      <span class="meta">${top && sTot ? `${pct(top.v / sTot)} of revenue · ${eur(top.v)}` : ""}</span></div>`;
+  $("evo-title").textContent = `Monthly revenue by channel${state.ch ? " · " + chLabel() : ""}`;
   drawArea(list);
 }
 
 function idxText(v) { return v == null ? "—" : fmt(v); }
 function renderObjective(scope) {
   const L = MONTHS[LAST].long;
-  $("obj-note").innerHTML = `<b>Obj Room Rev Mois</b> est l'objectif de revenu chambres de l'hôtel, tous canaux confondus. ` +
-    `Le revenu digital suivi ici en couvre en moyenne <b>${pct(COVER)}</b> sur le réseau en ${L}. ` +
-    `On en déduit pour chaque hôtel un <b>objectif digital</b> = Obj Room Rev × ${pct(COVER)}, puis un <b>indice</b> = revenu digital ÷ objectif digital × 100 ` +
-    `(100 = dans la moyenne du réseau ; ≥ 105 au-dessus, < 95 en dessous).`;
+  $("obj-note").innerHTML = `<b>Obj Room Rev Mois</b> is the hotel's room revenue target across all channels. ` +
+    `The digital revenue tracked here covers <b>${pct(COVER)}</b> of it on average across the network in ${L}. ` +
+    `Each hotel therefore gets a <b>digital target</b> = Room Rev target × ${pct(COVER)}, and an <b>index</b> = digital revenue ÷ digital target × 100 ` +
+    `(100 = network average; ≥ 105 above, < 95 below).`;
   const o = scope.filter((h) => h.obj);
   const rev = o.reduce((a, h) => a + h.rev, 0), obj = o.reduce((a, h) => a + h.obj, 0);
   const idx = obj ? (rev / (obj * COVER)) * 100 : null;
   const cnt = (s) => scope.filter((h) => h.stat === s).length;
   $("obj-tiles").innerHTML = `
-    <div class="tile hero"><span class="eyebrow">Indice ${state.dep ? "du département" : "réseau"} · ${esc(L)}</span>
+    <div class="tile hero"><span class="eyebrow">${state.dep ? "Department" : "Network"} index · ${esc(L)}</span>
       <span class="tval">${idxText(idx)}</span>
-      <span class="tmeta">Revenu digital ${eur(rev)} · objectif digital ${eur(obj * COVER)} · écart ${eur(rev - obj * COVER)}</span></div>` +
+      <span class="tmeta">Digital revenue ${eur(rev)} · digital target ${eur(obj * COVER)} · gap ${eur(rev - obj * COVER)}</span></div>` +
     ["above", "line", "below", "nd"].map((s) => `<div class="tile"><span class="eyebrow"><i class="dot" style="width:9px;height:9px;border-radius:50%;display:inline-block;background:var(${ST[s].color})"></i>${ST[s].label}</span>
-      <span class="tval">${cnt(s)}</span><span class="tmeta">${scope.length ? pct(cnt(s) / scope.length, 0) : "—"} des hôtels</span></div>`).join("");
+      <span class="tval">${cnt(s)}</span><span class="tmeta">${scope.length ? pct(cnt(s) / scope.length, 0) : "—"} of hotels</span></div>`).join("");
   const ranked = o.slice().sort((a, b) => b.idx - a.idx);
   const li = (h) => `<li><button type="button" data-i="${h.i}"><span>${esc(h.n.replace(/^B&B (HOTEL|HOME)\s*/, ""))}</span><span>${fmt(h.idx)}</span></button></li>`;
   $("l-top").innerHTML = ranked.slice(0, 5).map(li).join("");
@@ -918,14 +918,14 @@ function renderTable(scope) {
   const val = (h) => k === "rk" ? (rankMap.get(h.i) ?? 1e9) : k === "n" || k === "c" ? h[k] : (h[k] ?? -Infinity);
   const q = state.q.toLowerCase();
   const rows = scope.filter((h) => !q || `${h.n} ${h.c} ${h.t} ${h.cp} ${h.vb}`.toLowerCase().includes(q))
-    .sort((a, b) => { const x = val(a), y = val(b); return (typeof x === "string" ? x.localeCompare(y, "fr") : x - y) * dir; });
+    .sort((a, b) => { const x = val(a), y = val(b); return (typeof x === "string" ? x.localeCompare(y, "en") : x - y) * dir; });
   $("tbl").querySelector("tbody").innerHTML = rows.map((h) => `<tr data-i="${h.i}" class="${h.i === state.hotel ? "cur" : ""}">
     <td class="rk l">${rankMap.get(h.i) ?? "—"}</td><td class="nm l" title="${esc(h.n)} — ${esc(h.c)}">${esc(h.n.replace(/^B&B (HOTEL|HOME)\s*/, ""))}</td>
     <td>${eur(h.obj)}</td><td>${eur(h.rev)}</td>
     <td>${h.cov == null ? "—" : pct(h.cov)}</td>
     <td>${eur(h.tgt)}</td><td style="color:var(${h.gap == null ? "--muted" : h.gap >= 0 ? "--up" : "--down"})">${h.gap == null ? "—" : (h.gap > 0 ? "+" : "") + eur(h.gap)}</td>
     <td><span class="status"><i style="background:var(${ST[h.stat].color})"></i>${idxText(h.idx)}</span></td><td>${pill(h.yoy)}</td></tr>`).join("");
-  $("t-count").textContent = `${rows.length} hôtel${rows.length > 1 ? "s" : ""}`;
+  $("t-count").textContent = `${rows.length} hotel${rows.length > 1 ? "s" : ""}`;
   $("tbl").querySelectorAll("th").forEach((th) => th.setAttribute("aria-sort", th.dataset.k === k ? (dir < 0 ? "descending" : "ascending") : "none"));
   // Fait défiler le tableau (pas la page) jusqu'à l'hôtel sélectionné
   const cur = $("tbl").querySelector("tr.cur"), box = $("tbl").parentElement;
@@ -946,7 +946,7 @@ function renderChannels(scope) {
   const pp = prevPeriod(), yp = yoyPeriod();
   const agg = (fn, f, t) => list.reduce((a, x) => a + sumR(fn(x), f, t), 0);
   const total = agg((x) => x.tot, state.f, state.t);
-  $("scope-3").textContent = `${h ? h.n : (state.dep ? depLabel(state.dep) : "France entière")} · ${periodLabel()}`;
+  $("scope-3").textContent = `${h ? h.n : (state.dep ? depLabel(state.dep) : "All of France")} · ${periodLabel()}`;
 
   $("ch-cards").innerHTML = GR.map((g) => {
     const fn = (x) => x.grp[g.i];
@@ -955,7 +955,7 @@ function renderChannels(scope) {
     return `<button type="button" class="ch-card" data-v="g:${g.i}" aria-pressed="${state.ch === "g:" + g.i}">
       <span class="eyebrow"><i style="background:var(${g.color})"></i>${esc(g.n)}</span>
       <span class="cval">${eur(v)}</span>
-      <span class="meta"><span>${total ? pct(v / total) : "—"} du total</span>${yp ? `<span>N-1 ${pill(ev)}</span>` : pp ? `<span>préc. ${pill(ev)}</span>` : ""}</span></button>`;
+      <span class="meta"><span>${total ? pct(v / total) : "—"} of total</span>${yp ? `<span>LY ${pill(ev)}</span>` : pp ? `<span>prev. ${pill(ev)}</span>` : ""}</span></button>`;
   }).join("");
 
   const rows = CH.map((c, i) => {
@@ -973,12 +973,12 @@ function renderChannels(scope) {
   const totM = zeros(), selM = zeros();
   list.forEach((x) => { x.tot.forEach((v, m) => { totM[m] += v; }); if (sel) sel(x).forEach((v, m) => { selM[m] += v; }); });
   const selColor = !state.ch ? css("--fg") : css(GR[state.ch.startsWith("g:") ? +state.ch.slice(2) : CH[+state.ch.slice(2)].gi].color);
-  $("share-title").textContent = state.ch ? `Part de « ${chLabel()} » dans le revenu digital` : "Revenu digital total — choisissez un channel pour voir sa part";
+  $("share-title").textContent = state.ch ? `“${chLabel()}” share of digital revenue` : "Total digital revenue — pick a channel to see its share";
   chShare?.destroy();
   chShare = new Chart($("c-share"), {
     type: "line",
     data: { labels: MONTHS.map((m) => m.short), datasets: [{
-      label: state.ch ? chLabel() : "Revenu total",
+      label: state.ch ? chLabel() : "Total revenue",
       data: state.ch ? selM.map((v, m) => totM[m] ? (v / totM[m]) * 100 : 0) : totM,
       borderColor: selColor, backgroundColor: selColor, borderWidth: 2, pointRadius: 3, pointHoverRadius: 5, tension: 0.25,
     }] },
@@ -991,7 +991,7 @@ function renderChannels(scope) {
 
   // Top 10 hôtels du scope pour le channel sélectionné
   const ranked = scope.map((x) => ({ x, v: sumR(chSeries(x), state.f, state.t) })).filter((r) => r.v > 0).sort((a, b) => b.v - a.v).slice(0, 10);
-  $("top10-title").textContent = `Top 10 hôtels · ${chLabel()} · ${periodLabel()}`;
+  $("top10-title").textContent = `Top 10 hotels · ${chLabel()} · ${periodLabel()}`;
   chTop?.destroy();
   chTop = new Chart($("c-top10"), {
     type: "bar",

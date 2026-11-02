@@ -30,16 +30,16 @@ DEP_URL = "https://raw.githubusercontent.com/gregoiredavid/france-geojson/master
 # Familles de channels affichées (ordre = empilement du graphique en aires, du bas vers le haut)
 GROUPS = [
     ("seo", "SEO", ["SEO"]),
-    ("sea_b", "SEA Brand", ["SEA Google - Brand", "SEA Google - Brand (conversion)",
-                            "SEA Bing - Brand", "SEA Bing - Brand (conversion)"]),
-    ("sea_nb", "SEA Non Brand", ["SEA Google - Non Brand", "SEA Google - Non Brand (awareness/consideration)",
-                                 "SEA Bing - Non Brand", "SEA Bing - Non Brand (awareness/consideration)"]),
+    ("sea", "SEA", ["SEA Google - Brand", "SEA Google - Brand (conversion)",
+                    "SEA Google - Non Brand", "SEA Google - Non Brand (awareness/consideration)",
+                    "SEA Bing - Brand", "SEA Bing - Brand (conversion)",
+                    "SEA Bing - Non Brand", "SEA Bing - Non Brand (awareness/consideration)"]),
     ("gmaps", "Google Maps", ["Google Maps"]),
     ("meta", "Metasearch", ["Metasearch"]),
-    ("aff", "Affiliation", ["Affiliation"]),
+    ("aff", "Affiliate", ["Affiliation"]),
     ("direct", "Direct", ["Direct"]),
     # 8 familles max (lisibilité du graphique empilé) : Email, Referral, Display, Social, AI Assistants, Unassigned…
-    ("other", "Autres", []),
+    ("other", "Other", []),
 ]
 ADDR_RX = re.compile(r"^(.*?)\s*,\s*(\d{5})\s+([^,]+?)\s*(?:,\s*France)?\s*$")
 
